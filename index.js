@@ -3,16 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const submit = document.querySelector('#weatherForm')
   submit.addEventListener('submit', e => {
     e.preventDefault()
-
+    const form = document.querySelector('form')
+  
     fetch(`http://localhost:3000/weather`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify( {type: 'location', query: 'London'} )
+      body: JSON.stringify( {type: 'location', query: form.location.value} )
     })
     .then(res => res.json())
-    .then(addResult)
+    .then(res => {
+      addResult(res)
+      form.reset()
+    })
     .catch(console.log)
   })
 })
