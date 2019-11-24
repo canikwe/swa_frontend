@@ -10,15 +10,15 @@ import SettingsCheckbox from '../components/SettingsCheckbox'
 class App extends Component {
   constructor() {
     super()
-    const defaultScale = localStorage.getItem('celsius')
+    const savedScale = localStorage.getItem('celsius')
 
     this.state = {
       currentLocation: {},
       city: undefined,
       temp: 0,
-      celsius: !!defaultScale ? defaultScale: true,
+      celsius: this.setScale(savedScale),
       searchTerm: '',
-      defaultSettings: !!defaultScale
+      defaultSettings: !!savedScale
     }
   }
 
@@ -32,6 +32,18 @@ class App extends Component {
       fetch('http://localhost:3000/weather/london')
       .then(res => res.json())
       .then(this.updateLocation)
+    }
+  }
+
+  // Returns the user's scale setting if saved. Defaults to celsius (true) if settings are not saved
+  setScale = (savedScale) => {
+    switch (savedScale) {
+      case 'false':
+        return false
+      case 'true':
+        return true
+      default:
+        return true
     }
   }
 
@@ -67,6 +79,7 @@ class App extends Component {
         currentLocation: res,
         city: res.name,
         temp: res.main.temp,
+        searchTerm: ''
       })
     }
   }
@@ -88,6 +101,7 @@ class App extends Component {
   }
 
   changeScale = () => {
+    this.state.defaultSettings ? localStorage.setItem('celsius', !this.state.celsius) : null
     this.setState({ celsius: !this.state.celsius })
   }
 
@@ -103,7 +117,6 @@ class App extends Component {
         <Location name={ city }/>
         <Temp temp={ this.getTemp(temp) }/>
         <Button handleClick={ this.changeScale } scale={ this.state.celsius ? 'fahrenheit' : 'celsius' }/>
-        <hr />
         <SettingsCheckbox checked={defaultSettings} handleChange={this.handleSettings} />
         <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.getNewLocation }/>
       </div>

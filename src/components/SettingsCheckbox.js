@@ -2,7 +2,11 @@ import React from 'react'
 
 const SettingsCheckbox = ({ checked, handleChange }) => {
   return (
-    <input type='checkbox' checked={ checked } onChange={ handleChange } />
+    <div>
+      <hr />
+      <p>Save settings component</p>
+      <input type='checkbox' checked={ checked } onChange={ handleChange } />
+    </div>
   )
 }
 
