@@ -4,28 +4,30 @@ import { hot } from 'react-hot-loader'
 import Location from '../components/Location'
 import Temp from '../components/Temp'
 import Button from '../components/Button'
+import UpdateForm from '../components/UpdateForm'
 
 class App extends Component {
 
   state = {
     currentLocation: {},
-    city: '',
+    city: undefined,
     temp: 0,
-    celsius: true
+    celsius: true,
+    searchTerm: ''
   }
 
   componentDidMount() {
     fetch('http://localhost:3000/weather/london')
     .then(res => res.json())
-    .then(this.updateWeather)
+    .then(this.updateLocation)
   }
 
-  updateWeather = res => {
+  updateLocation = res => {
     if (!!res.weather) {
       this.setState({ 
         currentLocation: res,
         city: res.name,
-        temp: res.main.temp
+        temp: res.main.temp,
       })
     }
   }
@@ -50,17 +52,27 @@ class App extends Component {
     this.setState({ celsius: !this.state.celsius })
   }
 
+  changeSearch = e => {
+    this.setState({ searchTerm: e.target.value })
+  }
 
+  getNewLocation = () => {
+    fetch(`http://localhost:3000/weather/${this.state.searchTerm}`)
+    .then(res => res.json())
+    .then(this.updateLocation)
+  }
 
 
   render() {
-    const { city, temp } = this.state
+    const { city, temp, searchTerm } = this.state
 
     return (
       <div className='App'>
         <Location name={ city }/>
         <Temp temp={ this.getTemp(temp) }/>
-        <Button handleClick={this.changeScale} scale={this.state.celsius ? 'fahrenheit' : 'celsius'}/>
+        <Button handleClick={ this.changeScale } scale={ this.state.celsius ? 'fahrenheit' : 'celsius' }/>
+        <hr />
+        <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.getNewLocation }/>
       </div>
     )
   }
