@@ -5,21 +5,60 @@ import Location from '../components/Location'
 import Temp from '../components/Temp'
 import Button from '../components/Button'
 import UpdateForm from '../components/UpdateForm'
+import SettingsCheckbox from '../components/SettingsCheckbox'
 
 class App extends Component {
+  constructor() {
+    super()
+    const defaultScale = localStorage.getItem('celsius')
 
-  state = {
-    currentLocation: {},
-    city: undefined,
-    temp: 0,
-    celsius: true,
-    searchTerm: ''
+    this.state = {
+      currentLocation: {},
+      city: undefined,
+      temp: 0,
+      celsius: !!defaultScale ? defaultScale: true,
+      searchTerm: '',
+      defaultSettings: !!defaultScale
+    }
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/weather/london')
-    .then(res => res.json())
-    .then(this.updateLocation)
+    const defaultCity = localStorage.getItem('city')
+    if (!!defaultCity){
+      fetch(`http://localhost:3000/weather/${defaultCity}`)
+      .then(res => res.json())
+      .then(this.updateLocation)
+    } else {
+      fetch('http://localhost:3000/weather/london')
+      .then(res => res.json())
+      .then(this.updateLocation)
+    }
+  }
+
+  getNewLocation = () => {
+    fetch(`http://localhost:3000/weather/${this.state.searchTerm}`)
+      .then(res => res.json())
+      .then(this.updateLocation)
+  }
+
+  handleSettings = () => {
+    
+    if (this.state.defaultSettings) {
+      this.removeSettings()
+    } else {
+      this.saveSettings()
+    }
+    this.setState({ defaultSettings: !this.state.defaultSettings })
+  }
+
+  saveSettings = () => {
+    localStorage.setItem('city', this.state.city)
+    localStorage.setItem('celsius', this.state.celsius)
+  }
+
+  removeSettings = () => {
+    localStorage.removeItem('city')
+    localStorage.removeItem('celsius')
   }
 
   updateLocation = res => {
@@ -56,15 +95,8 @@ class App extends Component {
     this.setState({ searchTerm: e.target.value })
   }
 
-  getNewLocation = () => {
-    fetch(`http://localhost:3000/weather/${this.state.searchTerm}`)
-    .then(res => res.json())
-    .then(this.updateLocation)
-  }
-
-
   render() {
-    const { city, temp, searchTerm } = this.state
+    const { city, temp, defaultSettings, searchTerm } = this.state
 
     return (
       <div className='App'>
@@ -72,6 +104,7 @@ class App extends Component {
         <Temp temp={ this.getTemp(temp) }/>
         <Button handleClick={ this.changeScale } scale={ this.state.celsius ? 'fahrenheit' : 'celsius' }/>
         <hr />
+        <SettingsCheckbox checked={defaultSettings} handleChange={this.handleSettings} />
         <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.getNewLocation }/>
       </div>
     )
