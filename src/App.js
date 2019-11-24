@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
 
 import Location from './Location'
+import Temp from './Temp'
 
 import '../index.css'
 
@@ -25,13 +26,13 @@ class App extends Component {
   }
 
 
-
   render() {
-    const { name } = this.state.currentLocation
+    const { currentLocation } = this.state
 
     return (
       <div className='App'>
-        <Location name={ name }/>
+        <Location name={ currentLocation.name }/>
+        <Temp temp={ currentLocation.main ?  currentLocation.main.temp : 'Loading...'}/>
       </div>
     )
   }
