@@ -57,7 +57,7 @@ class App extends Component {
 
 
   render() {
-    const { currentLocation, city, temp } = this.state
+    const { city, temp } = this.state
 
     return (
       <div className='App'>
