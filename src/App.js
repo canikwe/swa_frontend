@@ -12,6 +12,8 @@ class App extends Component {
 
   state = {
     currentLocation: {},
+    city: '',
+    temp: 0,
     celsius: true
   }
 
@@ -21,9 +23,13 @@ class App extends Component {
     .then(this.updateWeather)
   }
 
-  updateWeather = currentLocation => {
-    if (!!currentLocation.weather) {
-      this.setState({ currentLocation })
+  updateWeather = res => {
+    if (!!res.weather) {
+      this.setState({ 
+        currentLocation: res,
+        city: res.name,
+        temp: res.main.temp
+      })
     }
   }
 
@@ -48,13 +54,15 @@ class App extends Component {
   }
 
 
+
+
   render() {
-    const { currentLocation } = this.state
+    const { currentLocation, city, temp } = this.state
 
     return (
       <div className='App'>
-        <Location name={ currentLocation.name }/>
-        <Temp temp={ currentLocation.main ?  this.getTemp(currentLocation.main.temp) : 'Loading...'}/>
+        <Location name={ city }/>
+        <Temp temp={ this.getTemp(temp) }/>
         <Button handleClick={this.changeScale} scale={this.state.celsius ? 'fahrenheit' : 'celsius'}/>
       </div>
     )
