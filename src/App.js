@@ -1,12 +1,15 @@
 import React, { Component } from 'react'
 import { hot } from 'react-hot-loader'
+
+import Location from './Location'
+
 import '../index.css'
 
 
 class App extends Component {
 
   state = {
-    currentWeather: {}
+    currentLocation: {}
   }
 
   componentDidMount() {
@@ -15,16 +18,20 @@ class App extends Component {
     .then(this.updateWeather)
   }
 
-  updateWeather = currentWeather => {
-    if (!!currentWeather.weather) {
-      this.setState({ currentWeather })
+  updateWeather = currentLocation => {
+    if (!!currentLocation.weather) {
+      this.setState({ currentLocation })
     }
   }
 
+
+
   render() {
+    const { name } = this.state.currentLocation
+
     return (
       <div className='App'>
-        <h1>The Fucking Weather</h1>
+        <Location name={ name }/>
       </div>
     )
   }
