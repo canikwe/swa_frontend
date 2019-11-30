@@ -1,8 +1,8 @@
 import React from "react"
 
-const Temp = ({ temp }) => {
+const Temp = ({ temp, scale }) => {
   return (
-    <h2> { temp } </h2>
+    <h2> { temp } ° { scale } </h2>
   )
 }
 

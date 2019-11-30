@@ -1,0 +1,14 @@
+h1 {
+  font-size: 5em;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
+  font-family: 'Alatsi', sans-serif;
+}
