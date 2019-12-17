@@ -24,7 +24,8 @@ class App extends Component {
       defaultSettings: !!savedScale,
       loading: true,
       scale: savedScale ? savedScale : 'C',
-      locations: []
+      locations: [],
+      geometry: {}
     }
   }
 
@@ -34,7 +35,7 @@ class App extends Component {
     if (!!defaultCity){
       this.getNewLocation({type: 'location', query: defaultCity})
     } else {
-      this.getNewLocation({type: 'location', query, location: 'london'})
+      this.getNewLocation({type: 'location', query: 'london'})
     }
   }
 
@@ -45,7 +46,8 @@ class App extends Component {
     .then(res => res.json())
     .then(data => {
       if (data.length === 1) {
-        this.getNewLocation({location: this.state.searchTerm})
+        const search = {type: 'coord', query: data[0].geometry}
+        this.getNewLocation(search)
       } else {
         this.setState({locations: data})
       }
@@ -53,7 +55,7 @@ class App extends Component {
   }
 
   // Event handles the fecth request to the backend with the location term
-  getNewLocation = (data) => {
+  getNewLocation = (search) => {
     // fetch(`http://localhost:3000/weather/${location}`)
     //   .then(res => res.json())
     //   .then(this.handleLocationChange)
@@ -64,7 +66,7 @@ class App extends Component {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(search)
     })
     .then(res => res.json())
     .then(this.handleLocationChange)
@@ -85,14 +87,17 @@ class App extends Component {
   saveSettings = () => {
     localStorage.setItem('city', this.state.city)
     localStorage.setItem('scale', this.state.scale)
+    localStorage.setItem('coord', this.state.geometry)
   }
 
   removeSettings = () => {
     localStorage.removeItem('city')
     localStorage.removeItem('scale')
+    localStorage.removeItem('coord')
   }
 
   handleLocationChange = res => {
+    console.log(res)
     if (!!res.weather) {
       this.setState({ 
         currentLocation: res,
