@@ -25,17 +25,19 @@ class App extends Component {
       loading: true,
       scale: savedScale ? savedScale : 'C',
       locations: [],
-      geometry: {}
+      coord: {}
     }
   }
 
   componentDidMount() {
     const defaultCity = localStorage.getItem('city')
     const defaultState = localStorage.getItem('state')
+    const lat = localStorage.getItem('lat')
+    const lng = localStorage.getItem('lng')
     
     if (!!defaultCity){
       this.setLocation(defaultCity, defaultState)
-      this.getWeather({type: 'location', query: defaultCity})
+      this.getWeather({type: 'coord', query: { lat, lng }})
     } else {
       this.setLocation('London','England')
       this.getWeather({type: 'location', query: 'london'})
@@ -61,11 +63,13 @@ class App extends Component {
     })
   }
 
-  // Event handles the fecth request to the backend with the location term
+  
+  setLocation = (city, state) => {
+    this.setState({ city, state })
+  }
+
+  // Event handles the fecth request to the backend
   getWeather = (search, location) => {
-    // fetch(`http://localhost:3000/weather/${location}`)
-    //   .then(res => res.json())
-    //   .then(this.handleLocationChange)
     
     fetch(`http://localhost:3000/weather`, {
       method: 'POST',
@@ -82,9 +86,20 @@ class App extends Component {
     })
   }
 
-  setLocation = (city, state) => {
-    // debugger
-    this.setState({ city, state })
+  updateWeather = res => {
+    console.log(res)
+    if (!!res.weather) {
+      this.setState({ 
+        currentLocation: res,
+        // city: res.name,
+        temp: res.main.temp,
+        searchTerm: '',
+        loading: false,
+        locations: [],
+        coord: res.coord,
+        error: undefined
+      })
+    }
   }
 
   // Renders different settings buttons depending on whether or not the user has chosen to save their settings
@@ -102,11 +117,13 @@ class App extends Component {
   }
 
   saveSettings = () => {
-    // debugger
     localStorage.setItem('city', this.state.city)
     localStorage.setItem('scale', this.state.scale)
-    localStorage.setItem('coord', this.state.geometry)
+    localStorage.setItem('lat', this.state.coord.lat)
+    localStorage.setItem('lng', this.state.coord.lon)   
     localStorage.setItem('state', this.state.state)
+
+    this.setState({ defaultSettings: true })
   }
 
   removeSettings = () => {
@@ -114,21 +131,10 @@ class App extends Component {
     localStorage.removeItem('scale')
     localStorage.removeItem('coord')
     localStorage.removeItem('state')
-  }
+    localStorage.removeItem('lat')
+    localStorage.removeItem('lng')
 
-  updateWeather = res => {
-    console.log(res)
-    if (!!res.weather) {
-      this.setState({ 
-        currentLocation: res,
-        // city: res.name,
-        temp: res.main.temp,
-        searchTerm: '',
-        loading: false,
-        locations: [],
-        error: undefined
-      })
-    }
+    this.setState({ defaultSettings: false })
   }
 
   getTemp = temp => {
