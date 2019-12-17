@@ -6,7 +6,7 @@ import Temp from '../components/Temp'
 import Rating from '../components/Rating'
 import Button from '../components/Button'
 import UpdateForm from '../components/UpdateForm'
-import SettingsCheckbox from '../components/SettingsCheckbox'
+import SettingsButton from '../components/SettingsButton'
 import LocationList from '../components/LocationList'
 
 import '../../index.css'
@@ -87,20 +87,22 @@ class App extends Component {
     this.setState({ city, state })
   }
 
-  // Event handler for saving user's settings
-  handleSettings = () => {
-    
+  // Renders different settings buttons depending on whether or not the user has chosen to save their settings
+  renderSettingsBtn = () => {
     if (this.state.defaultSettings) {
-      this.removeSettings()
+      return (
+        <>
+          <SettingsButton text="Update My Fucking Settings" handleChange={this.saveSettings} />
+          <SettingsButton text="Remove My Fucking Settings" handleChange={this.removeSettings} />
+        </>
+      )
     } else {
-      this.saveSettings()
+      return <SettingsButton text="Save My Fucking Settings" handleChange={this.saveSettings} />
     }
-    this.setState({ defaultSettings: !this.state.defaultSettings })
   }
 
-
   saveSettings = () => {
-
+    // debugger
     localStorage.setItem('city', this.state.city)
     localStorage.setItem('scale', this.state.scale)
     localStorage.setItem('coord', this.state.geometry)
@@ -177,7 +179,7 @@ class App extends Component {
             <Temp temp={ this.getTemp(temp)} scale={ this.state.scale }/>
             <Rating cold={ this.getRating() } />
             <Button handleClick={ this.changeScale } scale={ this.state.scale === 'C' ? 'fahrenheit' : 'celsius' } />
-            <SettingsCheckbox checked={ defaultSettings } handleChange={this.handleSettings} />
+            { this.renderSettingsBtn() }
             <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.searchLocations } />
             {this.state.locations.length > 0 ? 
               <LocationList locations={this.state.locations} handleClick={this.getWeather} /> : null
