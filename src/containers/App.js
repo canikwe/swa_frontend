@@ -7,6 +7,7 @@ import Rating from '../components/Rating'
 import Button from '../components/Button'
 import UpdateForm from '../components/UpdateForm'
 import SettingsCheckbox from '../components/SettingsCheckbox'
+import LocationList from '../components/LocationList'
 
 import '../../index.css'
 
@@ -22,7 +23,8 @@ class App extends Component {
       searchTerm: '',
       defaultSettings: !!savedScale,
       loading: true,
-      scale: savedScale ? savedScale : 'C'
+      scale: savedScale ? savedScale : 'C',
+      locations: []
     }
   }
 
@@ -30,9 +32,9 @@ class App extends Component {
     const defaultCity = localStorage.getItem('city')
     
     if (!!defaultCity){
-      this.getNewLocation(defaultCity)
+      this.getNewLocation({type: 'location', query: defaultCity})
     } else {
-      this.getNewLocation('london')
+      this.getNewLocation({type: 'location', query, location: 'london'})
     }
   }
 
@@ -43,7 +45,7 @@ class App extends Component {
     .then(res => res.json())
     .then(data => {
       if (data.length === 1) {
-        this.getNewLocation(this.state.searchTerm)
+        this.getNewLocation({location: this.state.searchTerm})
       } else {
         this.setState({locations: data})
       }
@@ -51,10 +53,21 @@ class App extends Component {
   }
 
   // Event handles the fecth request to the backend with the location term
-  getNewLocation = (location) => {
-    fetch(`http://localhost:3000/weather/${location}`)
-      .then(res => res.json())
-      .then(this.handleLocationChange)
+  getNewLocation = (data) => {
+    // fetch(`http://localhost:3000/weather/${location}`)
+    //   .then(res => res.json())
+    //   .then(this.handleLocationChange)
+    
+    fetch(`http://localhost:3000/weather`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(this.handleLocationChange)
   }
 
   // Event handler for saving user's settings
@@ -86,7 +99,8 @@ class App extends Component {
         city: res.name,
         temp: res.main.temp,
         searchTerm: '',
-        loading: false
+        loading: false,
+        locations: []
       })
     }
   }
@@ -141,8 +155,8 @@ class App extends Component {
             <Button handleClick={ this.changeScale } scale={ this.state.scale === 'C' ? 'fahrenheit' : 'celsius' } />
             <SettingsCheckbox checked={ defaultSettings } handleChange={this.handleSettings} />
             <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.searchLocations } />
-            {this.state.locations ? 
-              <h2>Multiple locations found</h2> : null
+            {this.state.locations.length > 0 ? 
+              <LocationList locations={this.state.locations} handleClick={this.getNewLocation} /> : null
             }
           </>
         )}
