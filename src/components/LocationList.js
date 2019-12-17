@@ -6,7 +6,7 @@ const LocationList = ({ locations, handleClick }) => {
     <>
       <h2>Multiple Locations. Please select from below:</h2>
       <ul>
-        { locations.map(l => <li key={ l.annotations.MGRS } onClick={ () => handleClick({type: 'coord', query: l.geometry}) }>{l.annotations.flag} - {l.formatted}</li>) }
+        { locations.map(l => <li key={ l.annotations.MGRS } onClick={ () => handleClick({type: 'coord', query: l.geometry}, l) }>{l.annotations.flag} - {l.formatted}</li>) }
       </ul>
     </>
   )

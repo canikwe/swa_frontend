@@ -31,11 +31,14 @@ class App extends Component {
 
   componentDidMount() {
     const defaultCity = localStorage.getItem('city')
+    const defaultState = localStorage.getItem('state')
     
     if (!!defaultCity){
-      this.getNewLocation({type: 'location', query: defaultCity})
+      this.setLocation(defaultCity, defaultState)
+      this.getWeather({type: 'location', query: defaultCity})
     } else {
-      this.getNewLocation({type: 'location', query: 'london'})
+      this.setLocation('London','England')
+      this.getWeather({type: 'location', query: 'london'})
     }
   }
 
@@ -45,9 +48,13 @@ class App extends Component {
     fetch(`http://localhost:3000/search/${this.state.searchTerm}`)
     .then(res => res.json())
     .then(data => {
-      if (data.length === 1) {
-        const search = {type: 'coord', query: data[0].geometry}
-        this.getNewLocation(search)
+      if (data.length === 0) {
+        this.setState({error: "I can't find your fucking location!"})
+      } else if (data.length === 1) {
+        const location = data[0]
+        const search = {type: 'coord', query: location.geometry}
+        this.getWeather(search)
+        this.setLocation(location.components.city, location.components.state)
       } else {
         this.setState({locations: data})
       }
@@ -55,7 +62,7 @@ class App extends Component {
   }
 
   // Event handles the fecth request to the backend with the location term
-  getNewLocation = (search) => {
+  getWeather = (search, location) => {
     // fetch(`http://localhost:3000/weather/${location}`)
     //   .then(res => res.json())
     //   .then(this.handleLocationChange)
@@ -69,7 +76,15 @@ class App extends Component {
       body: JSON.stringify(search)
     })
     .then(res => res.json())
-    .then(this.handleLocationChange)
+    .then(data => {
+      if (location) this.setLocation(location.components.city, location.components.state)
+      this.updateWeather(data)
+    })
+  }
+
+  setLocation = (city, state) => {
+    // debugger
+    this.setState({ city, state })
   }
 
   // Event handler for saving user's settings
@@ -85,27 +100,31 @@ class App extends Component {
 
 
   saveSettings = () => {
+
     localStorage.setItem('city', this.state.city)
     localStorage.setItem('scale', this.state.scale)
     localStorage.setItem('coord', this.state.geometry)
+    localStorage.setItem('state', this.state.state)
   }
 
   removeSettings = () => {
     localStorage.removeItem('city')
     localStorage.removeItem('scale')
     localStorage.removeItem('coord')
+    localStorage.removeItem('state')
   }
 
-  handleLocationChange = res => {
+  updateWeather = res => {
     console.log(res)
     if (!!res.weather) {
       this.setState({ 
         currentLocation: res,
-        city: res.name,
+        // city: res.name,
         temp: res.main.temp,
         searchTerm: '',
         loading: false,
-        locations: []
+        locations: [],
+        error: undefined
       })
     }
   }
@@ -146,7 +165,7 @@ class App extends Component {
   }
 
   render() {
-    const { city, temp, defaultSettings, searchTerm } = this.state
+    const { city, state, temp, defaultSettings, searchTerm } = this.state
 
     return (
       <div id='app'>
@@ -154,15 +173,16 @@ class App extends Component {
           <h1>Loading...</h1>
         ) : (
           <>
-            <Location name={ city }/>
+            <Location city={ city } state={ state }/>
             <Temp temp={ this.getTemp(temp)} scale={ this.state.scale }/>
             <Rating cold={ this.getRating() } />
             <Button handleClick={ this.changeScale } scale={ this.state.scale === 'C' ? 'fahrenheit' : 'celsius' } />
             <SettingsCheckbox checked={ defaultSettings } handleChange={this.handleSettings} />
             <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.searchLocations } />
             {this.state.locations.length > 0 ? 
-              <LocationList locations={this.state.locations} handleClick={this.getNewLocation} /> : null
+              <LocationList locations={this.state.locations} handleClick={this.getWeather} /> : null
             }
+            {this.state.error ? <h2>{this.state.error}</h2> : null}
           </>
         )}
       </div>
