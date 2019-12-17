@@ -5,9 +5,11 @@ const UpdateForm = ({ searchTerm, handleChange, handleClick }) => {
   return(
     <>
       <p>Update Form Component</p>
-      <label htmlFor='location' />
-      <input type='text' value={searchTerm} onChange={ handleChange } name='location' />
-      <button onClick={ handleClick } >Update my fucking location</button>
+      <form>
+        <label htmlFor='location' />
+        <input type='text' value={searchTerm} onChange={ handleChange } name='location' />
+        <input type='submit' value='Update my fucking location' onClick={ handleClick } />
+      </form>
     </>
   )
 }

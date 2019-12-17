@@ -3,6 +3,7 @@ import { hot } from 'react-hot-loader'
 
 import Location from '../components/Location'
 import Temp from '../components/Temp'
+import Rating from '../components/Rating'
 import Button from '../components/Button'
 import UpdateForm from '../components/UpdateForm'
 import SettingsCheckbox from '../components/SettingsCheckbox'
@@ -18,7 +19,6 @@ class App extends Component {
       currentLocation: {},
       city: undefined,
       temp: 0,
-      // celsius: this.setScale(savedScale),
       searchTerm: '',
       defaultSettings: !!savedScale,
       loading: true,
@@ -36,21 +36,18 @@ class App extends Component {
     }
   }
 
-  // Returns the user's scale setting if saved. Defaults to celsius (true) if settings are not saved
-  setScale = (savedScale) => {
-    switch (savedScale) {
-      case 'F':
-        return false
-      case 'C':
-        return true
-      default:
-        return true
-    }
-  }
-
   // Event handler when the user searches for a new location
-  updateLocation = () => {
-    this.getNewLocation(this.state.searchTerm)
+  searchLocations = e => {
+    e.preventDefault()
+    fetch(`http://localhost:3000/search/${this.state.searchTerm}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.length === 1) {
+        this.getNewLocation(this.state.searchTerm)
+      } else {
+        this.setState({locations: data})
+      }
+    })
   }
 
   // Event handles the fecth request to the backend with the location term
@@ -74,13 +71,11 @@ class App extends Component {
 
   saveSettings = () => {
     localStorage.setItem('city', this.state.city)
-    localStorage.setItem('celsius', this.state.celsius)
     localStorage.setItem('scale', this.state.scale)
   }
 
   removeSettings = () => {
     localStorage.removeItem('city')
-    localStorage.removeItem('celsius')
     localStorage.removeItem('scale')
   }
 
@@ -127,6 +122,10 @@ class App extends Component {
     this.setState({ searchTerm: e.target.value })
   }
 
+  getRating = () => {
+    return this.state.temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
+  }
+
   render() {
     const { city, temp, defaultSettings, searchTerm } = this.state
 
@@ -138,15 +137,13 @@ class App extends Component {
           <>
             <Location name={ city }/>
             <Temp temp={ this.getTemp(temp)} scale={ this.state.scale }/>
-            <Button handleClick={ this.changeScale } scale={ this.state.scale === 'F' ? 'fahrenheit' : 'celsius' } />
+            <Rating cold={ this.getRating() } />
+            <Button handleClick={ this.changeScale } scale={ this.state.scale === 'C' ? 'fahrenheit' : 'celsius' } />
             <SettingsCheckbox checked={ defaultSettings } handleChange={this.handleSettings} />
-            <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.updateLocation } />
-
-            <i className="material-icons">cloud</i>
-            <i className="material-icons">favorite</i>
-            <i className="material-icons">attachment</i>
-            <i className="material-icons">computer</i>
-            <i className="material-icons">traffic</i>
+            <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.searchLocations } />
+            {this.state.locations ? 
+              <h2>Multiple locations found</h2> : null
+            }
           </>
         )}
       </div>
