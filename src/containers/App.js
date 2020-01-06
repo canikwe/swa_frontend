@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import { hot } from 'react-hot-loader'
 
 import Location from '../components/Location'

@@ -4,7 +4,7 @@ const SettingsButton = ({ text, handleChange }) => {
   return (
     <div>
       <hr />
-      <p>Save settings component</p>
+      <p>Settings component</p>
       <button onClick={ handleChange }>{ text }</button>
       {/* <input type='checkbox' checked={ checked } onChange={ handleChange } /> */}
     </div>
