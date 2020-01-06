@@ -18,7 +18,12 @@ module.exports= {
       }
     ]
   },
-  resolve: { extensions: ["*", ".js", ".jsx"] },
+  resolve: { 
+    extensions: ["*", ".js", ".jsx"],
+    alias: {
+      'react-dom': '@hot-loader/react-dom'
+    }
+  },
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",
@@ -28,7 +33,7 @@ module.exports= {
     contentBase: path.join(__dirname, "public"),
     port: 3001,
     publicPath: "http://localhost:3000/dist/",
-    hotOnly: true
+    // hotOnly: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  // plugins: [new webpack.HotModuleReplacementPlugin()]
 }
