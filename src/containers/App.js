@@ -17,16 +17,19 @@ const App = () => {
   const [loading, updateLoading] = useState(true)
   const [city, updateCity] = useState(undefined)
   const [state, updateState] = useState(undefined)
+  const [scale, updateScale] = useState('C')
 
   useEffect(() => {
     const defaultCity = localStorage.getItem('city')
     const defaultState = localStorage.getItem('state')
+    const defaultScale = localStorage.getItem('scale')
     const lat = localStorage.getItem('lat')
     const lng = localStorage.getItem('lng')
 
      if (!!defaultCity){
        updateCity(defaultCity)
        updateState(defaultState)
+       updateScale(defaultScale)
        getWeather({type: 'coord', query: { lat, lng }})
     } else {
       setLocation('London','England')
@@ -166,13 +169,13 @@ const App = () => {
   //   this.setState({ defaultSettings: false })
   // }
 
-  // const getTemp = temp => {
-  //   if (this.state.scale === 'C') {
-  //     return this.celsiusConvert(temp)
-  //   } else {
-  //     return this.fahrenheitConvert(temp)
-  //   }
-  // }
+  const getTemp = () => {
+    if (scale === 'C') {
+      return celsiusConvert(temp)
+    } else {
+      return fahrenheitConvert(temp)
+    }
+  }
 
   const celsiusConvert = temp => {
     return Math.round(temp - 273)
@@ -206,13 +209,13 @@ const App = () => {
   return (
     <div id='app'>
       { loading ? (
-        <h1>The temp is not { temp } .. Loading...</h1>
+        <h1>Loading...</h1>
       ) : (
         <>
         { null }
           <Location city={ city } state={ state }/>
-          {/* <Temp temp={ this.getTemp(temp)} scale={ this.state.scale }/>
-          <Rating cold={ this.getRating() } />
+          <Temp temp={ getTemp()} scale={ scale }/>
+            {/* <Rating cold={ this.getRating() } />
           <Button handleClick={ this.changeScale } scale={ this.state.scale === 'C' ? 'fahrenheit' : 'celsius' } />
           { this.renderSettingsBtn() }
           <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.searchLocations } />
