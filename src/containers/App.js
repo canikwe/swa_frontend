@@ -18,6 +18,11 @@ const App = () => {
   const [city, updateCity] = useState(undefined)
   const [state, updateState] = useState(undefined)
   const [scale, updateScale] = useState('C')
+  const [lat, updateLat] = useState(0)
+  const [lon, updateLon] = useState(0)
+  const [searchTerm, updateSearchTerm] = useState('')
+  const [error, updateError] = useState(undefined)
+  const [locations, updateLocations] = useState([])
 
   useEffect(() => {
     const defaultCity = localStorage.getItem('city')
@@ -30,6 +35,8 @@ const App = () => {
        updateCity(defaultCity)
        updateState(defaultState)
        updateScale(defaultScale)
+       updateLat(lat)
+       updateLon(lng)
        getWeather({type: 'coord', query: { lat, lng }})
     } else {
       setLocation('London','England')
@@ -74,23 +81,23 @@ const App = () => {
   // }
 
   // Event handler when the user searches for a new location
-  // const searchLocations = e => {
-  //   e.preventDefault()
-  //   fetch(`http://localhost:3000/search/${this.state.searchTerm}`)
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     if (data.length === 0) {
-  //       this.setState({error: "I can't find your fucking location!"})
-  //     } else if (data.length === 1) {
-  //       const location = data[0]
-  //       const search = {type: 'coord', query: location.geometry}
-  //       this.getWeather(search)
-  //       this.setLocation(location.components.city, location.components.state)
-  //     } else {
-  //       this.setState({locations: data})
-  //     }
-  //   })
-  // }
+  const searchLocations = e => {
+    e.preventDefault()
+    fetch(`http://localhost:3000/search/${searchTerm}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.length === 0) {
+        updateError("I can't find your fucking location!")
+      } else if (data.length === 1) {
+        const location = data[0]
+        const search = {type: 'coord', query: location.geometry}
+        getWeather(search)
+        setLocation(location.components.city, location.components.state)
+      } else {
+        updateLocations( data )
+      }
+    })
+  }
 
   
   const setLocation = (city, state) => {
@@ -115,6 +122,10 @@ const App = () => {
       // updateWeather(data)
       updateTemp(data.main.temp)
       updateLoading(false)
+      updateError(undefined)
+      updateLocations([])
+      updateCity(data.name)
+      updateSearchTerm('')
     })
   }
 
@@ -135,39 +146,39 @@ const App = () => {
   // }
 
   // Renders different settings buttons depending on whether or not the user has chosen to save their settings
-  // const renderSettingsBtn = () => {
-  //   if (this.state.defaultSettings) {
-  //     return (
-  //       <>
-  //         <SettingsButton text="Update My Fucking Settings" handleChange={this.saveSettings} />
-  //         <SettingsButton text="Remove My Fucking Settings" handleChange={this.removeSettings} />
-  //       </>
-  //     )
-  //   } else {
-  //     return <SettingsButton text="Save My Fucking Settings" handleChange={this.saveSettings} />
-  //   }
-  // }
+  const renderSettingsBtn = () => {
+    if (localStorage.getItem('scale')) {
+      return (
+        <>
+          <SettingsButton text="Update My Fucking Settings" handleChange={saveSettings} />
+          <SettingsButton text="Remove My Fucking Settings" handleChange={removeSettings} />
+        </>
+      )
+    } else {
+      return <SettingsButton text="Save My Fucking Settings" handleChange={saveSettings} />
+    }
+  }
 
-  // const saveSettings = () => {
-  //   localStorage.setItem('city', this.state.city)
-  //   localStorage.setItem('scale', this.state.scale)
-  //   localStorage.setItem('lat', this.state.coord.lat)
-  //   localStorage.setItem('lng', this.state.coord.lon)   
-  //   localStorage.setItem('state', this.state.state)
+  const saveSettings = () => {
+    localStorage.setItem('city', city)
+    localStorage.setItem('scale', scale)
+    localStorage.setItem('lat', lat)
+    localStorage.setItem('lng', lon)   
+    localStorage.setItem('state', state)
 
-  //   this.setState({ defaultSettings: true })
-  // }
+    // this.setState({ defaultSettings: true })
+  }
 
-  // const removeSettings = () => {
-  //   localStorage.removeItem('city')
-  //   localStorage.removeItem('scale')
-  //   localStorage.removeItem('coord')
-  //   localStorage.removeItem('state')
-  //   localStorage.removeItem('lat')
-  //   localStorage.removeItem('lng')
+  const removeSettings = () => {
+    localStorage.removeItem('city')
+    localStorage.removeItem('scale')
+    localStorage.removeItem('coord')
+    localStorage.removeItem('state')
+    localStorage.removeItem('lat')
+    localStorage.removeItem('lng')
 
-  //   this.setState({ defaultSettings: false })
-  // }
+    // this.setState({ defaultSettings: false })
+  }
 
   const getTemp = () => {
     if (scale === 'C') {
@@ -185,24 +196,24 @@ const App = () => {
     return Math.round(temp * (9/5) - 459.67)
   }
 
-  // const changeScale = () => {
-  //   const newScale = this.state.scale === 'C' ? 'F' : 'C'
+  const changeScale = () => {
+    const newScale = scale === 'C' ? 'F' : 'C'
 
-  //   if (this.state.defaultSettings) {
-  //     localStorage.setItem('celsius', !this.state.celsius)
-  //     localStorage.setItem('scale', newScale)
-  //   }
+    if (localStorage.getItem('scale')) {
+      // localStorage.setItem('celsius', !this.state.celsius)
+      localStorage.setItem('scale', newScale)
+    }
 
-  //   this.setState({ scale: newScale })
-  // }
+    updateScale(newScale)
+  }
 
-  // const changeSearch = e => {
-  //   this.setState({ searchTerm: e.target.value })
-  // }
+  const changeSearch = e => {
+    updateSearchTerm(e.target.value)
+  }
 
-  // const getRating = () => {
-  //   return this.state.temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
-  // }
+  const getRating = () => {
+    return temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
+  }
 
   console.log(loading, temp)
   // const { city, state, temp, defaultSettings, searchTerm } = this.state
@@ -212,17 +223,16 @@ const App = () => {
         <h1>Loading...</h1>
       ) : (
         <>
-        { null }
           <Location city={ city } state={ state }/>
           <Temp temp={ getTemp()} scale={ scale }/>
-            {/* <Rating cold={ this.getRating() } />
-          <Button handleClick={ this.changeScale } scale={ this.state.scale === 'C' ? 'fahrenheit' : 'celsius' } />
-          { this.renderSettingsBtn() }
-          <UpdateForm searchTerm={ searchTerm } handleChange={ this.changeSearch } handleClick={ this.searchLocations } />
-          {this.state.locations.length > 0 ? 
-            <LocationList locations={this.state.locations} handleClick={this.getWeather} /> : null
+          <Rating cold={ getRating() } />
+          <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
+          { renderSettingsBtn() }
+          <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
+            {locations.length > 0 ? 
+            <LocationList locations={locations} handleClick={getWeather} /> : null
           }
-          {this.state.error ? <h2>{this.state.error}</h2> : null} */}
+          {error ? <h2>{error}</h2> : null}
         </>
       )}
     </div>
