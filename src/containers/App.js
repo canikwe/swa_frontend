@@ -13,6 +13,8 @@ import '../../index.css'
 
 const App = () => {
 
+// ----------------------- Set up initial state -----------------------
+
   const [temp, updateTemp] = useState(0)
   const [loading, updateLoading] = useState(true)
   const [city, updateCity] = useState('London')
@@ -23,7 +25,8 @@ const App = () => {
   const [searchTerm, updateSearchTerm] = useState('')
   const [error, updateError] = useState(undefined)
   const [locations, updateLocations] = useState([])
-//{lon: -0.13, lat: 51.51}
+
+// ----------------------- Effect to fire when component first mounts -----------------------
   useEffect(() => {
     const defaultCity = localStorage.getItem('city')
     const defaultState = localStorage.getItem('state')
@@ -32,61 +35,45 @@ const App = () => {
     const defaultLng = localStorage.getItem('lng')
 
      if (!!defaultCity){
-      //  updateCity(defaultCity)
-      //  updateState(defaultState)
-       updateScale(defaultScale)
-       updateLat(defaultLat)
-       updateLng(defaultLng)
-       setLocation(defaultCity, defaultState)
-       getWeather({type: 'coord', query: { lat: defaultLat, lng: defaultLng }})
+      updateScale(defaultScale)
+      updateLat(defaultLat)
+      updateLng(defaultLng)
+      setLocation(defaultCity, defaultState)
+      getWeather({type: 'coord', query: { lat: defaultLat, lng: defaultLng }})
     } else {
-      // setLocation('London','England')
       getWeather({type: 'coord', query: { lat, lng }})
     }
 
   }, [])
-
-
-  // ----------------------  Class State Syntax  --------------------------------
   
-  // constructor() {
-  //   super()
-  //   const savedScale = localStorage.getItem('scale')
+// ----------------------- State changing helper methods -----------------------
 
-  //   this.state = {
-  //     currentLocation: {},
-  //     city: undefined,
-  //     temp: 0,
-  //     searchTerm: '',
-  //     defaultSettings: !!savedScale,
-  //     loading: true,
-  //     scale: savedScale ? savedScale : 'C',
-  //     locations: [],
-  //     coord: {}
-  //   }
-  // }
-
-  // componentDidMount() {
-  //   const defaultCity = localStorage.getItem('city')
-  //   const defaultState = localStorage.getItem('state')
-  //   const lat = localStorage.getItem('lat')
-  //   const lng = localStorage.getItem('lng')
-    
-  //   if (!!defaultCity){
-  //     this.setLocation(defaultCity, defaultState)
-  //     this.getWeather({type: 'coord', query: { lat, lng }})
-  //   } else {
-  //     this.setLocation('London','England')
-  //     this.getWeather({type: 'location', query: 'london'})
-  //   }
-  // }
+  const setLocation = (city, state) => {
+    updateCity(city)
+    updateState(state)
+  }
 
   const handleLocationSelect = (location) => {
-    
     setLocation(location.components.city, location.components.state)
     getWeather({ type: 'coord', query: location.geometry })
   }
-  // Event handler when the user searches for a new location
+
+  const changeScale = () => {
+    const newScale = scale === 'C' ? 'F' : 'C'
+
+    if (localStorage.getItem('scale')) {
+      localStorage.setItem('scale', newScale)
+    }
+
+    updateScale(newScale)
+  }
+
+  const changeSearch = e => {
+    updateSearchTerm(e.target.value)
+  }
+
+// ----------------------- Async callback/helper functions -----------------------
+
   const searchLocations = e => {
     e.preventDefault()
     fetch(`http://localhost:3000/search/${searchTerm}`)
@@ -106,13 +93,6 @@ const App = () => {
     })
   }
 
-  
-  const setLocation = (city, state) => {
-    updateCity(city)
-    updateState(state)
-  }
-
-  // Event handles the fecth request to the backend
   const getWeather = (search, location) => {
     
     fetch(`http://localhost:3000/weather`, {
@@ -125,13 +105,10 @@ const App = () => {
     })
     .then(res => res.json())
     .then(data => {
-      // debugger
-      // updateWeather(data)
       updateTemp(data.main.temp)
       updateLoading(false)
       updateError(undefined)
       updateLocations([])
-      // updateCity(data.name)
       updateSearchTerm('')
     })
     .catch(err => {
@@ -140,21 +117,7 @@ const App = () => {
     })
   }
 
-  // const updateWeather = res => {
-  //   console.log(res)
-  //   if (!!res.weather) {
-  //     this.setState({ 
-  //       currentLocation: res,
-  //       // city: res.name,
-  //       temp: res.main.temp,
-  //       searchTerm: '',
-  //       loading: false,
-  //       locations: [],
-  //       coord: res.coord,
-  //       error: undefined
-  //     })
-  //   }
-  // }
+// ----------------------- Helper functions -----------------------
 
   // Renders different settings buttons depending on whether or not the user has chosen to save their settings
   const renderSettingsBtn = () => {
@@ -162,7 +125,7 @@ const App = () => {
       return (
         <>
           <SettingsButton text="Update My Fucking Settings" handleChange={saveSettings} />
-          <SettingsButton text="Remove My Fucking Settings" handleChange={removeSettings} />
+          <SettingsButton text="Forget My Fucking Settings" handleChange={removeSettings} />
         </>
       )
     } else {
@@ -171,24 +134,24 @@ const App = () => {
   }
 
   const saveSettings = () => {
-    localStorage.setItem('city', city)
     localStorage.setItem('scale', scale)
+    localStorage.setItem('city', city)
+    localStorage.setItem('state', state)
     localStorage.setItem('lat', lat)
     localStorage.setItem('lng', lng)   
-    localStorage.setItem('state', state)
 
   }
 
   const removeSettings = () => {
-    localStorage.removeItem('city')
     localStorage.removeItem('scale')
-    localStorage.removeItem('coord')
+    localStorage.removeItem('city')
     localStorage.removeItem('state')
     localStorage.removeItem('lat')
     localStorage.removeItem('lng')
 
   }
 
+  // Temperature helper functions
   const getTemp = () => {
     if (scale === 'C') {
       return celsiusConvert(temp)
@@ -203,20 +166,6 @@ const App = () => {
 
   const fahrenheitConvert = temp => {
     return Math.round(temp * (9/5) - 459.67)
-  }
-
-  const changeScale = () => {
-    const newScale = scale === 'C' ? 'F' : 'C'
-
-    if (localStorage.getItem('scale')) {
-      localStorage.setItem('scale', newScale)
-    }
-
-    updateScale(newScale)
-  }
-
-  const changeSearch = e => {
-    updateSearchTerm(e.target.value)
   }
 
   const weatherMessage = () => {
