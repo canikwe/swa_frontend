@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { hot } from 'react-hot-loader'
 
 import Location from '../components/Location'
 import Temp from '../components/Temp'
@@ -25,6 +24,11 @@ const App = () => {
   const [searchTerm, updateSearchTerm] = useState('')
   const [error, updateError] = useState(undefined)
   const [locations, updateLocations] = useState([])
+  
+  // settings object
+  const [settings, updateSettings] = useState(
+    { city: 'London', state: 'England', scale: 'C', coord: {lat: 51.5074, lng: 0.1278}, saved: false }
+    )
 
 // ----------------------- Effect to fire when component first mounts -----------------------
   useEffect(() => {
@@ -35,11 +39,21 @@ const App = () => {
     const defaultLng = localStorage.getItem('lng')
 
      if (!!defaultCity){
+       
       updateScale(defaultScale)
       updateLat(defaultLat)
       updateLng(defaultLng)
       setLocation(defaultCity, defaultState)
       getWeather({type: 'coord', query: { lat: defaultLat, lng: defaultLng }})
+      
+      //settings obj
+      const city = localStorage.getItem('city')
+      const state = localStorage.getItem('state')
+      const scale = localStorage.getItem('scale')
+      const lat = localStorage.getItem('lat')
+      const lng = localStorage.getItem('lng')
+
+      updateSettings({ city, state, scale, lat, lng, saved: true })
     } else {
       getWeather({type: 'coord', query: { lat, lng }})
     }
@@ -51,6 +65,8 @@ const App = () => {
   const setLocation = (city, state) => {
     updateCity(city)
     updateState(state)
+
+    updateSettings({ ...settings, city, state })
   }
 
   const handleLocationSelect = (location) => {
@@ -66,6 +82,8 @@ const App = () => {
     }
 
     updateScale(newScale)
+
+    updateSettings({ ... settings, scale: newScale })
   }
 
   const changeSearch = e => {
@@ -133,12 +151,14 @@ const App = () => {
     }
   }
 
-  const saveSettings = () => {
+  const saveSettings = () => { // Make this a single object
     localStorage.setItem('scale', scale)
     localStorage.setItem('city', city)
     localStorage.setItem('state', state)
     localStorage.setItem('lat', lat)
-    localStorage.setItem('lng', lng)   
+    localStorage.setItem('lng', lng)
+    
+    localStorage.setItem('settings', settings)
 
   }
 
@@ -148,6 +168,8 @@ const App = () => {
     localStorage.removeItem('state')
     localStorage.removeItem('lat')
     localStorage.removeItem('lng')
+
+    localStorage.removeItem('settings', settings)
 
   }
 
@@ -176,6 +198,7 @@ const App = () => {
   if (loading) {
     return <h1>Loading...</h1>
   } else {
+    const { city, state, scale } = settings
     return (
       <div id='app'>
 
@@ -189,7 +212,7 @@ const App = () => {
             { locations.length > 0 ? 
               <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
             }
-            { error ? <h2>{error}</h2> : null }
+            { error ? <h2>{ error }</h2> : null }
           </>
     </div>
         )
