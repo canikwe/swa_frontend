@@ -15,32 +15,33 @@ const App = () => {
 
   const [temp, updateTemp] = useState(0)
   const [loading, updateLoading] = useState(true)
-  const [city, updateCity] = useState(undefined)
-  const [state, updateState] = useState(undefined)
+  const [city, updateCity] = useState('London')
+  const [state, updateState] = useState('England')
   const [scale, updateScale] = useState('C')
-  const [lat, updateLat] = useState(0)
-  const [lon, updateLon] = useState(0)
+  const [lat, updateLat] = useState(51.5074)
+  const [lng, updateLng] = useState(0.1278)
   const [searchTerm, updateSearchTerm] = useState('')
   const [error, updateError] = useState(undefined)
   const [locations, updateLocations] = useState([])
-
+//{lon: -0.13, lat: 51.51}
   useEffect(() => {
     const defaultCity = localStorage.getItem('city')
     const defaultState = localStorage.getItem('state')
     const defaultScale = localStorage.getItem('scale')
-    const lat = localStorage.getItem('lat')
-    const lng = localStorage.getItem('lng')
+    const defaultLat = localStorage.getItem('lat')
+    const defaultLng = localStorage.getItem('lng')
 
      if (!!defaultCity){
-       updateCity(defaultCity)
-       updateState(defaultState)
+      //  updateCity(defaultCity)
+      //  updateState(defaultState)
        updateScale(defaultScale)
-       updateLat(lat)
-       updateLon(lng)
-       getWeather({type: 'coord', query: { lat, lng }})
+       updateLat(defaultLat)
+       updateLng(defaultLng)
+       setLocation(defaultCity, defaultState)
+       getWeather({type: 'coord', query: { lat: defaultLat, lng: defaultLng }})
     } else {
-      setLocation('London','England')
-      getWeather({type: 'location', query: 'london'})
+      // setLocation('London','England')
+      getWeather({type: 'coord', query: { lat, lng }})
     }
 
   }, [])
@@ -80,6 +81,11 @@ const App = () => {
   //   }
   // }
 
+  const handleLocationSelect = (location) => {
+    
+    setLocation(location.components.city, location.components.state)
+    getWeather({ type: 'coord', query: location.geometry })
+  }
   // Event handler when the user searches for a new location
   const searchLocations = e => {
     e.preventDefault()
@@ -91,8 +97,9 @@ const App = () => {
       } else if (data.length === 1) {
         const location = data[0]
         const search = {type: 'coord', query: location.geometry}
-        getWeather(search)
+        
         setLocation(location.components.city, location.components.state)
+        getWeather(search)
       } else {
         updateLocations( data )
       }
@@ -118,14 +125,18 @@ const App = () => {
     })
     .then(res => res.json())
     .then(data => {
-      if (location) setLocation(location.components.city, location.components.state)
+      // debugger
       // updateWeather(data)
       updateTemp(data.main.temp)
       updateLoading(false)
       updateError(undefined)
       updateLocations([])
-      updateCity(data.name)
+      // updateCity(data.name)
       updateSearchTerm('')
+    })
+    .catch(err => {
+      console.log(err.message)
+      updateError(err.message)
     })
   }
 
@@ -163,10 +174,9 @@ const App = () => {
     localStorage.setItem('city', city)
     localStorage.setItem('scale', scale)
     localStorage.setItem('lat', lat)
-    localStorage.setItem('lng', lon)   
+    localStorage.setItem('lng', lng)   
     localStorage.setItem('state', state)
 
-    // this.setState({ defaultSettings: true })
   }
 
   const removeSettings = () => {
@@ -177,7 +187,6 @@ const App = () => {
     localStorage.removeItem('lat')
     localStorage.removeItem('lng')
 
-    // this.setState({ defaultSettings: false })
   }
 
   const getTemp = () => {
@@ -200,7 +209,6 @@ const App = () => {
     const newScale = scale === 'C' ? 'F' : 'C'
 
     if (localStorage.getItem('scale')) {
-      // localStorage.setItem('celsius', !this.state.celsius)
       localStorage.setItem('scale', newScale)
     }
 
@@ -211,34 +219,34 @@ const App = () => {
     updateSearchTerm(e.target.value)
   }
 
-  const getRating = () => {
+  const weatherMessage = () => {
     return temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
   }
 
   console.log(loading, temp)
-  // const { city, state, temp, defaultSettings, searchTerm } = this.state
-  return (
-    <div id='app'>
-      { loading ? (
-        <h1>Loading...</h1>
-      ) : (
-        <>
-          <Location city={ city } state={ state }/>
-          <Temp temp={ getTemp()} scale={ scale }/>
-          <Rating cold={ getRating() } />
-          <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
-          { renderSettingsBtn() }
-          <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
-            {locations.length > 0 ? 
-            <LocationList locations={locations} handleClick={getWeather} /> : null
-          }
-          {error ? <h2>{error}</h2> : null}
-        </>
-      )}
+  if (loading) {
+    return <h1>Loading...</h1>
+  } else {
+    return (
+      <div id='app'>
+
+          <>
+            <Location city={ city } state={ state }/>
+            <Temp temp={ getTemp() } scale={ scale }/>
+            <Rating cold={ weatherMessage() } />
+            <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
+            { renderSettingsBtn() }
+            <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
+            { locations.length > 0 ? 
+              <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
+            }
+            { error ? <h2>{error}</h2> : null }
+          </>
     </div>
-  )
+        )
+  }
+  
   
 }
 
-// export default hot(module)(App)
 export default App
