@@ -50,7 +50,7 @@ const App = () => {
 // ----------------------- State changing helper methods -----------------------
 
   const handleLocationSelect = location => {
-    updateSettings({ ...settings, city: location.components.city, state: location.components.state })
+    updateSettings({ ...settings, city: location.components.city, state: location.components.state, coord: location.geometry })
     getWeather({ type: 'coord', query: location.geometry })
   }
 
@@ -67,7 +67,6 @@ const App = () => {
   }
 
   const resetSearch = () => {
-    updateLoading(false)
     updateError(undefined)
     updateLocations([])
     updateSearchTerm('')
@@ -111,8 +110,11 @@ const App = () => {
     })
     .then(res => res.json())
     .then(data => {
+      //`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
+      console.log(data)
       updateTemp(data.main.temp)
-      resetSearch()
+      updateLoading(false)
+      if (searchTerm !== '') resetSearch()
     })
     .catch(err => {
       console.log(err.message)
@@ -138,11 +140,13 @@ const App = () => {
 
   // localStorage/settings helper functions
   const saveSettings = () => {
-    localStorage.setItem('scale', scale)
-    localStorage.setItem('city', city)
-    localStorage.setItem('state', state)
-    localStorage.setItem('lat', lat)
-    localStorage.setItem('lng', lng)
+    localStorage.setItem('scale', settings.scale)
+    localStorage.setItem('city', settings.city)
+    localStorage.setItem('state', settings.state)
+    localStorage.setItem('lat', settings.coord.lat)
+    localStorage.setItem('lng', settings.coord.lng)
+
+    updateSettings({ ...settings, saved: true })
   }
 
   const removeSettings = () => {
@@ -151,6 +155,8 @@ const App = () => {
     localStorage.removeItem('state')
     localStorage.removeItem('lat')
     localStorage.removeItem('lng')
+
+    updateSettings({ ...settings, saved: false })
   }
 
   // Temperature helper functions
