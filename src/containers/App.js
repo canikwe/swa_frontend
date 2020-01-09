@@ -16,11 +16,11 @@ const App = () => {
 
   const [temp, updateTemp] = useState(0)
   const [loading, updateLoading] = useState(true)
-  const [city, updateCity] = useState('London')
-  const [state, updateState] = useState('England')
-  const [scale, updateScale] = useState('C')
-  const [lat, updateLat] = useState(51.5074)
-  const [lng, updateLng] = useState(0.1278)
+  // const [city, updateCity] = useState('London')
+  // const [state, updateState] = useState('England')
+  // const [scale, updateScale] = useState('C')
+  // const [lat, updateLat] = useState(51.5074)
+  // const [lng, updateLng] = useState(0.1278)
   const [searchTerm, updateSearchTerm] = useState('')
   const [error, updateError] = useState(undefined)
   const [locations, updateLocations] = useState([])
@@ -32,30 +32,33 @@ const App = () => {
 
 // ----------------------- Effect to fire when component first mounts -----------------------
   useEffect(() => {
-    const defaultCity = localStorage.getItem('city')
-    const defaultState = localStorage.getItem('state')
-    const defaultScale = localStorage.getItem('scale')
-    const defaultLat = localStorage.getItem('lat')
-    const defaultLng = localStorage.getItem('lng')
+    const city = localStorage.getItem('city')
+    // const defaultState = localStorage.getItem('state')
+    // const defaultScale = localStorage.getItem('scale')
+    // const defaultLat = localStorage.getItem('lat')
+    // const defaultLng = localStorage.getItem('lng')
 
-     if (!!defaultCity){
+     if (!!city){
        
-      updateScale(defaultScale)
-      updateLat(defaultLat)
-      updateLng(defaultLng)
-      setLocation(defaultCity, defaultState)
-      getWeather({type: 'coord', query: { lat: defaultLat, lng: defaultLng }})
-      
-      //settings obj
-      const city = localStorage.getItem('city')
+       // updateScale(defaultScale)
+       // updateLat(defaultLat)
+       // updateLng(defaultLng)
+
+       //settings obj
+      //  const city = localStorage.getItem('city')
       const state = localStorage.getItem('state')
       const scale = localStorage.getItem('scale')
       const lat = localStorage.getItem('lat')
       const lng = localStorage.getItem('lng')
 
+      setLocation(city, state)
+      
+      
       updateSettings({ city, state, scale, lat, lng, saved: true })
+      getWeather({type: 'coord', query: { lat: defaultLat, lng: defaultLng }})
+
     } else {
-      getWeather({type: 'coord', query: { lat, lng }})
+      getWeather({type: 'coord', query: settings.coord })
     }
 
   }, [])
@@ -75,15 +78,15 @@ const App = () => {
   }
 
   const changeScale = () => {
-    const newScale = scale === 'C' ? 'F' : 'C'
+    const newScale = settings.scale === 'C' ? 'F' : 'C'
 
-    if (localStorage.getItem('scale')) {
+    if (settings.saved) {
       localStorage.setItem('scale', newScale)
     }
 
-    updateScale(newScale)
+    // updateScale(newScale)
 
-    updateSettings({ ... settings, scale: newScale })
+    updateSettings({ ...settings, scale: newScale })
   }
 
   const changeSearch = e => {
@@ -139,7 +142,7 @@ const App = () => {
 
   // Renders different settings buttons depending on whether or not the user has chosen to save their settings
   const renderSettingsBtn = () => {
-    if (localStorage.getItem('scale')) {
+    if (settings.saved) {
       return (
         <>
           <SettingsButton text="Update My Fucking Settings" handleChange={saveSettings} />
@@ -157,9 +160,6 @@ const App = () => {
     localStorage.setItem('state', state)
     localStorage.setItem('lat', lat)
     localStorage.setItem('lng', lng)
-    
-    localStorage.setItem('settings', settings)
-
   }
 
   const removeSettings = () => {
@@ -168,25 +168,22 @@ const App = () => {
     localStorage.removeItem('state')
     localStorage.removeItem('lat')
     localStorage.removeItem('lng')
-
-    localStorage.removeItem('settings', settings)
-
   }
 
   // Temperature helper functions
   const getTemp = () => {
-    if (scale === 'C') {
-      return celsiusConvert(temp)
+    if (settings.scale === 'C') {
+      return celsiusConvert()
     } else {
-      return fahrenheitConvert(temp)
+      return fahrenheitConvert()
     }
   }
 
-  const celsiusConvert = temp => {
+  const celsiusConvert = () => {
     return Math.round(temp - 273)
   }
 
-  const fahrenheitConvert = temp => {
+  const fahrenheitConvert = () => {
     return Math.round(temp * (9/5) - 459.67)
   }
 
