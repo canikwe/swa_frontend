@@ -177,23 +177,23 @@ const App = () => {
 // ----------------------- Loading App and it's children -----------------------
 
   console.log(loading, temp)
-  
+
   if (loading) {
     return <h1>Loading...</h1>
   } else {
     const { city, state, scale } = settings
     return (
       <div id='app'>
-            <Location city={ city } state={ state }/>
-            <Temp temp={ getTemp() } scale={ scale }/>
-            <Rating cold={ weatherMessage() } />
-            <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
-            { renderSettingsBtn() }
-            <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
-            { locations.length > 0 ? 
-              <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
-            }
-            { error ? <h2>{ error }</h2> : null }
+        <Location city={ city } state={ state }/>
+        <Temp temp={ getTemp() } scale={ scale }/>
+        <Rating cold={ weatherMessage() } />
+        <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
+        { renderSettingsBtn() }
+        <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
+        { locations.length > 0 ? 
+          <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
+        }
+        { error ? <h2>{ error }</h2> : null }
       </div>
     )
   }
