@@ -12,26 +12,19 @@ const App = () => {
 
 // ----------------------- Set up initial state -----------------------
 
-  const [temp, updateTemp] = useState(0)
   const [loading, updateLoading] = useState(true)
   const [searchTerm, updateSearchTerm] = useState('')
   const [error, updateError] = useState(undefined)
   const [locations, updateLocations] = useState([])
-  
-  // settings object
-  const [settings, updateSettings] = useState({
-    city: 'London', 
-    state: 'England', 
-    scale: 'C', 
-    coord: {
-      lat: 51.5074, 
-      lng: 0.1278 
-    }, 
-    saved: false
-  })
+
+
+  const [settings, updateSettings] = useState({ scale: 'C', saved: false })
+  const [weather, updateWeather] = useState({ temp: 0, description: '', icon: '' })
+  const [location, updateLocation] = useState({ city: 'London', state: 'England', coord: {lat: 51.5074, lng: 0.1278} })
 
 // ----------------------- Effect to fire when component first mounts -----------------------
   useEffect(() => {
+    
     const city = localStorage.getItem('city')
 
      if (!!city){
@@ -40,17 +33,18 @@ const App = () => {
       const lat = localStorage.getItem('lat')
       const lng = localStorage.getItem('lng')
 
-      updateSettings({ city, state, scale, lat, lng, saved: true })
+      updateSettings({ scale, saved: true })
+      updateLocation({ city, state, coord: {lng, lat} })
       getWeather({ type: 'coord', query: { lat, lng } })
     } else {
-      getWeather({type: 'coord', query: settings.coord })
+      getWeather({type: 'coord', query: location.coord })
     }
   }, [])
   
 // ----------------------- State changing helper methods -----------------------
 
   const handleLocationSelect = location => {
-    updateSettings({ ...settings, city: location.components.city, state: location.components.state, coord: location.geometry })
+    updateLocation({ city: location.components.city, state: location.components.state, coord: location.geometry })
     getWeather({ type: 'coord', query: location.geometry })
   }
 
@@ -88,7 +82,7 @@ const App = () => {
           const location = data[0]
           const search = {type: 'coord', query: location.geometry}
           
-          updateSettings({ ...settings, city: location.components.city, state: location.components.state })
+          updateLocation({ city: location.components.city, state: location.components.state, coord: location.geometry })
           getWeather(search)
           break
         default:
@@ -112,7 +106,8 @@ const App = () => {
     .then(data => {
       //`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
       console.log(data)
-      updateTemp(data.main.temp)
+      
+      updateWeather({ temp: data.main.temp, description: data.weather[0].description, icon: data.weather[0].icon })
       updateLoading(false)
       if (searchTerm !== '') resetSearch()
     })
@@ -169,25 +164,26 @@ const App = () => {
   }
 
   const celsiusConvert = () => {
-    return Math.round(temp - 273)
+    return Math.round(weather.temp - 273)
   }
 
   const fahrenheitConvert = () => {
-    return Math.round(temp * (9/5) - 459.67)
+    return Math.round(weather.temp * (9/5) - 459.67)
   }
 
   const weatherMessage = () => {
-    return temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
+    return weather.temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
   }
 
 // ----------------------- Loading App and it's children -----------------------
 
-  console.log(loading, temp)
+  console.log(loading, weather.temp)
 
   if (loading) {
     return <h1>Loading...</h1>
   } else {
-    const { city, state, scale } = settings
+    const { scale } = settings
+    const { city, state } = location
     return (
       <div id='app'>
         <Location city={ city } state={ state }/>
