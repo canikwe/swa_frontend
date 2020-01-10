@@ -13,10 +13,11 @@ const App = () => {
 // ----------------------- Set up initial state -----------------------
 
   const [loading, updateLoading] = useState(true)
-  const [searchTerm, updateSearchTerm] = useState('')
-  const [error, updateError] = useState(undefined)
-  const [locations, updateLocations] = useState([])
+  // const [searchTerm, updateSearchTerm] = useState('')
+  // const [error, updateError] = useState(undefined)
+  // const [locations, updateLocations] = useState([])
 
+  const [search, updateSearch] = useState({ locations: [], term: '', errors: null })
 
   const [settings, updateSettings] = useState({ scale: 'C', saved: false })
   const [weather, updateWeather] = useState({ temp: 0, description: '', icon: '' })
@@ -57,36 +58,41 @@ const App = () => {
   }
 
   const changeSearch = e => {
-    updateSearchTerm(e.target.value)
+    // updateSearchTerm(e.target.value)
+    updateSearch({ ...search, term: e.target.value })
   }
 
   const resetSearch = () => {
-    updateError(undefined)
-    updateLocations([])
-    updateSearchTerm('')
+    // updateError(undefined)
+    // updateLocations([])
+    // updateSearchTerm('')
+
+    updateSearch({ locations: [], term: '', errors: null })
   }
 
 // ----------------------- Async callback/helper functions -----------------------
 
   const searchLocations = e => {
     e.preventDefault()
-
-    fetch(`http://localhost:3000/search/${searchTerm}`)
+    
+    fetch(`http://localhost:3000/search/${search.term}`)
     .then(res => res.json())
     .then(data => {
       switch (data.length) {
         case 0:
-          updateError("I can't find your fucking location!")
+          // updateError("I can't find your fucking location!")
+          updateSearch({ ...search, errors: "I can't fine your fucking location!" })
           break
         case 1:
           const location = data[0]
-          const search = {type: 'coord', query: location.geometry}
+          const newSearch = {type: 'coord', query: location.geometry}
           
           updateLocation({ city: location.components.city, state: location.components.state, coord: location.geometry })
-          getWeather(search)
+          getWeather(newSearch)
           break
         default:
-          updateLocations(data)
+          // updateLocations(data)
+          updateSearch({ ...search, locations: data })
           break
       }
     })
@@ -109,11 +115,12 @@ const App = () => {
       
       updateWeather({ temp: data.main.temp, description: data.weather[0].description, icon: data.weather[0].icon })
       updateLoading(false)
-      if (searchTerm !== '') resetSearch()
+      if (search.term !== '') resetSearch()
     })
     .catch(err => {
       console.log(err.message)
-      updateError(err.message)
+      // updateError(err.message)
+      updateSearch({ ...search, errors: err.message })
     })
   }
 
@@ -184,6 +191,7 @@ const App = () => {
   } else {
     const { scale } = settings
     const { city, state } = location
+    const { term: searchTerm, errors, locations } = search
     return (
       <div id='app'>
         <Location city={ city } state={ state }/>
@@ -195,7 +203,7 @@ const App = () => {
         { locations.length > 0 ? 
           <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
         }
-        { error ? <h2>{ error }</h2> : null }
+        { errors ? <h2>{ errors }</h2> : null }
       </div>
     )
   }
