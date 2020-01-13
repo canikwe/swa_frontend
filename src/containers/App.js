@@ -33,7 +33,7 @@ const App = () => {
       const scale = localStorage.getItem('scale')
       const lat = localStorage.getItem('lat')
       const lng = localStorage.getItem('lng')
-
+      
       updateSettings({ scale, saved: true })
       updateLocation({ city, state, coord: {lng, lat} })
       getWeather({ type: 'coord', query: { lat, lng } })
@@ -113,7 +113,7 @@ const App = () => {
       //`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
       console.log(data)
       
-      updateWeather({ temp: data.main.temp, description: data.weather[0].description, icon: data.weather[0].icon })
+      updateWeather({ temp: data.main.temp, description: data.weather[0].description, icon: data.weather[0].icon }) // DRY THIS UP!
       updateLoading(false)
       if (search.term !== '') resetSearch()
     })
@@ -143,10 +143,10 @@ const App = () => {
   // localStorage/settings helper functions
   const saveSettings = () => {
     localStorage.setItem('scale', settings.scale)
-    localStorage.setItem('city', settings.city)
-    localStorage.setItem('state', settings.state)
-    localStorage.setItem('lat', settings.coord.lat)
-    localStorage.setItem('lng', settings.coord.lng)
+    localStorage.setItem('city', location.city)
+    localStorage.setItem('state', location.state)
+    localStorage.setItem('lat', location.coord.lat)
+    localStorage.setItem('lng', location.coord.lng)
 
     updateSettings({ ...settings, saved: true })
   }
