@@ -45,8 +45,25 @@ const App = () => {
 // ----------------------- State changing helper methods -----------------------
 
   const handleLocationSelect = location => {
-    updateLocation({ city: location.components.city, state: location.components.state, coord: location.geometry })
+    handleLocationUpdate(location)
     getWeather({ type: 'coord', query: location.geometry })
+  }
+
+  const handleLocationUpdate = location => {
+    let city
+    if (location.components.city) {
+      city = location.components.city
+    } else if (location.components.village) {
+      city = location.components.village
+    } else if (location.components.hamlet) {
+      city = location.components.hamlet
+    } else if (location.components.state_district) {
+      city = location.components.state_district
+    } else {
+      city = '' 
+    }
+
+    updateLocation({ city , state: location.components.state, coord: location.geometry })
   }
 
   const changeScale = () => {
@@ -80,18 +97,14 @@ const App = () => {
     .then(data => {
       switch (data.length) {
         case 0:
-          // updateError("I can't find your fucking location!")
-          updateSearch({ ...search, errors: "I can't fine your fucking location!" })
+          updateSearch({ ...search, errors: "I can't find your fucking location!" })
           break
         case 1:
           const location = data[0]
-          const newSearch = {type: 'coord', query: location.geometry}
-          
-          updateLocation({ city: location.components.city, state: location.components.state, coord: location.geometry })
-          getWeather(newSearch)
+           debugger
+          handleLocationSelect(location)
           break
         default:
-          // updateLocations(data)
           updateSearch({ ...search, locations: data })
           break
       }
