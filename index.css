@@ -1,14 +1,43 @@
-h1 {
+/* h1 {
   font-size: 6em;
-}
+} 
 
 #app {
+ display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+}
+*/
+
+.location {
+  font-style: italic;
+  font-weight: bold;
+  color: rgba(94, 94, 94);
+}
+
+.center {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.temp {
+  font-size: 3em;
+  margin: 40px 0 0 0;
+}
+
+.rating {
+  font-size: 7em;
+  margin: 0;
+  color: rgba(94, 94, 94);
+}
+
+
+
 * {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Helvetica', sans-serif;
+  font-weight: normal;
+  color: rgba(110, 110, 110);
 }

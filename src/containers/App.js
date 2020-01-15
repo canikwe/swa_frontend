@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import Location from '../components/Location'
-import Temp from '../components/Temp'
+import Weather from '../components/Weather'
 import Rating from '../components/Rating'
 import Button from '../components/Button'
 import UpdateForm from '../components/UpdateForm'
@@ -50,20 +50,25 @@ const App = () => {
   }
 
   const handleLocationUpdate = location => {
+    const { components, geometry } = location
     let city
-    if (location.components.city) {
-      city = location.components.city
-    } else if (location.components.village) {
-      city = location.components.village
-    } else if (location.components.hamlet) {
-      city = location.components.hamlet
-    } else if (location.components.state_district) {
-      city = location.components.state_district
+    if (components.city) {
+      city = components.city
+    } else if (components.village) {
+      city = components.village
+    } else if (components.hamlet) {
+      city = components.hamlet
+    } else if (components.state_district) {
+      city = components.state_district
+    } else if (components.suburb){
+      city = components.suburb
+    } else if (components.county) {
+      city = components.county
     } else {
       city = '' 
     }
 
-    updateLocation({ city , state: location.components.state, coord: location.geometry })
+    updateLocation({ city , state: components.state, coord: geometry })
   }
 
   const changeScale = () => {
@@ -101,7 +106,6 @@ const App = () => {
           break
         case 1:
           const location = data[0]
-           debugger
           handleLocationSelect(location)
           break
         default:
@@ -205,10 +209,12 @@ const App = () => {
     const { scale } = settings
     const { city, state } = location
     const { term: searchTerm, errors, locations } = search
+    const { description, icon } = weather
+
     return (
       <div id='app'>
         <Location city={ city } state={ state }/>
-        <Temp temp={ getTemp() } scale={ scale }/>
+        <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
         <Rating cold={ weatherMessage() } />
         <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
         { renderSettingsBtn() }

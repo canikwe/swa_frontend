@@ -2,12 +2,12 @@ import React from 'react'
 
 const Location = props => {
   return (
-    <h4>{ props.city }, { props.state }</h4>
+    <p className='location'>{ props.city }, { props.state }</p>
   )
 }
 
 Location.defaultProps = {
-  name: 'The Fucking Weather'
+  name: 'Welcome to The Fucking Weather'
 }
 
 export default Location
