@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import Location from '../components/Location'
 import Weather from '../components/Weather'
-import Rating from '../components/Rating'
+import Forcast from '../components/Forcast'
 import Button from '../components/Button'
 import UpdateForm from '../components/UpdateForm'
 import SettingsButton from '../components/SettingsButton'
@@ -196,9 +196,6 @@ const App = () => {
     return Math.round(weather.temp * (9/5) - 459.67)
   }
 
-  const weatherMessage = () => {
-    return weather.temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
-  }
   const calculateForcast = () => {
     const { temp } = weather
     let condition
@@ -226,7 +223,7 @@ const App = () => {
       <div id='app'>
         <Location city={ city } state={ state }/>
         <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
-        <Rating cold={weatherMessage()} forcast={ calculateForcast() } />
+        <Forcast forcast={ calculateForcast() } />
         <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
         { renderSettingsBtn() }
         <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />

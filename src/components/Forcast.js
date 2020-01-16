@@ -1,7 +1,6 @@
 import React from 'react'
 
-const Rating = ({ cold, forcast }) => {
-  console.log(forcast.descriptions)
+const Forcast = ({ forcast }) => {
 
   const sample = (max) => {
     return Math.floor(Math.random() * Math.floor(max))
@@ -15,4 +14,4 @@ const Rating = ({ cold, forcast }) => {
   )
 }
 
-export default Rating
+export default Forcast
