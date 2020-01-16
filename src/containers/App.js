@@ -8,6 +8,8 @@ import UpdateForm from '../components/UpdateForm'
 import SettingsButton from '../components/SettingsButton'
 import LocationList from '../components/LocationList'
 
+import { forcasts } from '../helper/forcasts'
+
 const App = () => {
 
 // ----------------------- Set up initial state -----------------------
@@ -127,7 +129,6 @@ const App = () => {
     })
     .then(res => res.json())
     .then(data => {
-      //`http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`
       console.log(data)
       
       updateWeather({ temp: data.main.temp, description: data.weather[0].description, icon: data.weather[0].icon }) // DRY THIS UP!
@@ -198,6 +199,16 @@ const App = () => {
   const weatherMessage = () => {
     return weather.temp >= 285.15 ? "It's fucking hot." : "It's fucking cold."
   }
+  const calculateForcast = () => {
+    const { temp } = weather
+    let condition
+    if (temp > 285.15) {
+      condition = 'hot'
+    } else if (temp < 285.15) {
+      condition = 'cold'
+    }
+    return forcasts[condition]
+  }
 
 // ----------------------- Loading App and it's children -----------------------
 
@@ -215,7 +226,7 @@ const App = () => {
       <div id='app'>
         <Location city={ city } state={ state }/>
         <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
-        <Rating cold={ weatherMessage() } />
+        <Rating cold={weatherMessage()} forcast={ calculateForcast() } />
         <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
         { renderSettingsBtn() }
         <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />

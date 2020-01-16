@@ -1,9 +1,17 @@
 import React from 'react'
 
-const Rating = props => {
+const Rating = ({ cold, forcast }) => {
+  console.log(forcast.descriptions)
+
+  const sample = (max) => {
+    return Math.floor(Math.random() * Math.floor(max))
+  }
 
   return (
-    <h1 className='rating center'>{ props.cold }</h1>
+    <>
+      <h1 className='rating center'>{ forcast.msg }</h1>
+      <p>{ forcast.description }</p>
+    </>
   )
 }
 
