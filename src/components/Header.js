@@ -1,10 +1,10 @@
 import React from 'react'
 
-const Header = ({city, state, handleClick}) => {
+const Header = ({city, state, handleToggle}) => {
   return (
     <p className='location'>
       {city}, {state} 
-      <span onClick={handleClick}>  🔍</span>
+      <span onClick={handleToggle}>  🔍</span>
     </p>
   )
 }

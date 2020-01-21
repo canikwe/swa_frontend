@@ -3,10 +3,10 @@
 ## Component Hierarchy
 
 + App
-  + Header { city, state, handleToggle + def props: 'The Fucking Weather' }
+  ✅ Header { city, state, handleToggle + def props: 'The Fucking Weather' }
   // { searchToggle ? }
-  + SearchBar { searchTerm, handleChange, handleBackNav, handleSearch }
-  + Weather { ...weather, scale }
+  ✅ SearchBar { searchTerm, handleChange, handleBackNav, handleSearch, city, state }
+  ✅ Weather { ...weather, scale }
   + Forecast { forecast }
   + SettingsBtn {  scale, handleToggle }
   // { locationList.length !== 0 ?}

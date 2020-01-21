@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react'
 
 import Header from '../components/Header'
 import Weather from '../components/Weather'
-import Forcast from '../components/Forcast'
+import Forecast from '../components/Forecast'
 import Button from '../components/Button'
 import SearchBar from '../components/SearchBar'
 import SettingsButton from '../components/SettingsButton'
 import LocationList from '../components/LocationList'
 import Error from '../components/Error'
 
-import { forcasts } from '../helper/forcasts'
+import { forecasts } from '../helper/forecasts'
 
 const App = () => {
 
@@ -202,7 +202,7 @@ const App = () => {
     return Math.round(weather.temp * (9/5) - 459.67)
   }
 
-  const calculateForcast = () => {
+  const calculateForecast = () => {
     const { temp } = weather
     let condition
     if (temp > 285.15) {
@@ -210,7 +210,7 @@ const App = () => {
     } else if (temp < 285.15) {
       condition = 'cold'
     }
-    return forcasts[condition]
+    return forecasts[condition]
   }
 
 // ----------------------- Loading App and it's children -----------------------
@@ -231,13 +231,13 @@ const App = () => {
           searchToggle ? 
             <SearchBar searchTerm={ searchTerm } handleBackNav={resetSearch} handleChange={ changeSearch } handleSearch={ searchLocations } state={state} city={city} />
               :
-            <Header city={ city } state={ state } handleClick={toggleSearch}/>
+            <Header city={ city } state={ state } handleToggle={toggleSearch}/>
         }
 
         { locations.length === 0 && !error ?
         <>
           <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
-          <Forcast forcast={ calculateForcast() } />
+          <Forecast forecast={ calculateForecast() } />
           <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
           { renderSettingsBtn() }
         </> : null
