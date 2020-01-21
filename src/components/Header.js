@@ -10,7 +10,8 @@ const Header = ({city, state, handleToggle}) => {
 }
 
 Location.defaultProps = {
-  name: 'Welcome to The Fucking Weather'
+  city: 'Welcome to The Fucking Weather',
+  state: "enjoy your stay."
 }
 
 export default Header

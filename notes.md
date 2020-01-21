@@ -14,6 +14,8 @@
     ✅ Location { location, handleSelect }
   // { error ? }
   ✅ Error { error }
+  // { loading ? }
+  ✅ Loading
 
 ## Initial State
 
