@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import Location from '../components/Location'
+import Header from '../components/Header'
 import Weather from '../components/Weather'
 import Forcast from '../components/Forcast'
 import Button from '../components/Button'
@@ -19,7 +19,7 @@ const App = () => {
   // const [error, updateError] = useState(undefined)
   // const [locations, updateLocations] = useState([])
 
-  const [search, updateSearch] = useState({ locations: [], term: '', errors: null })
+  const [search, updateSearch] = useState({ toggle: false, locations: [], term: '', errors: null })
 
   const [settings, updateSettings] = useState({ scale: 'C', saved: false })
   const [weather, updateWeather] = useState({ temp: 0, description: '', icon: '' })
@@ -91,7 +91,7 @@ const App = () => {
     // updateLocations([])
     // updateSearchTerm('')
 
-    updateSearch({ locations: [], term: '', errors: null })
+    updateSearch({ toggle: false, locations: [], term: '', errors: null })
   }
 
 // ----------------------- Async callback/helper functions -----------------------
@@ -109,9 +109,10 @@ const App = () => {
         case 1:
           const location = data[0]
           handleLocationSelect(location)
+          resetSearch()
           break
         default:
-          updateSearch({ ...search, locations: data })
+          updateSearch({ ...search, errors: null, locations: data })
           break
       }
     })
@@ -216,17 +217,27 @@ const App = () => {
   } else {
     const { scale } = settings
     const { city, state } = location
-    const { term: searchTerm, errors, locations } = search
+    const { toggle: searchToggle, term: searchTerm, errors, locations } = search
     const { description, icon } = weather
 
     return (
       <div id='app'>
-        <Location city={ city } state={ state }/>
-        <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
-        <Forcast forcast={ calculateForcast() } />
-        <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
-        { renderSettingsBtn() }
-        <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
+        {
+          searchToggle ? 
+            <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
+              :
+            <Header city={ city } state={ state }/>
+        }
+
+        { locations.length === 0 && !errors ?
+        <>
+          <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
+          <Forcast forcast={ calculateForcast() } />
+          <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
+          { renderSettingsBtn() }
+        </> : null
+        }
+        
         { locations.length > 0 ? 
           <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
         }
