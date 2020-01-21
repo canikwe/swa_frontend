@@ -34,6 +34,19 @@
   color: rgba(94, 94, 94);
 }
 
+.settings {
+  display: flex;
+  justify-content: space-between;
+}
+
+.active {
+  font-weight: bolder;
+}
+
+body {
+  margin: 0;
+}
+
 * {
   font-family: 'Helvetica', sans-serif;
   font-weight: normal;

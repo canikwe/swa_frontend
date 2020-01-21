@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import Weather from '../components/Weather'
 import Forecast from '../components/Forecast'
-import Button from '../components/Button'
+// import Button from '../components/Button'
 import SearchBar from '../components/SearchBar'
-import SettingsButton from '../components/SettingsButton'
+import Settings from '../components/Settings'
 import LocationList from '../components/LocationList'
 import Error from '../components/Error'
 
@@ -74,8 +74,9 @@ const App = () => {
     updateLocation({ city , state: components.state, coord: geometry })
   }
 
-  const changeScale = () => {
-    const newScale = settings.scale === 'C' ? 'F' : 'C'
+  const changeScale = e => {
+    
+    const newScale = e.target.id
 
     if (settings.saved) localStorage.setItem('scale', newScale)
 
@@ -151,18 +152,18 @@ const App = () => {
 // ----------------------- Helper functions -----------------------
 
   // Renders different settings buttons depending on whether or not the user has chosen to save their settings
-  const renderSettingsBtn = () => {
-    if (settings.saved) {
-      return (
-        <>
-          <SettingsButton text="Update My Fucking Settings" handleChange={saveSettings} />
-          <SettingsButton text="Forget My Fucking Settings" handleChange={removeSettings} />
-        </>
-      )
-    } else {
-      return <SettingsButton text="Save My Fucking Settings" handleChange={saveSettings} />
-    }
-  }
+  // const renderSettingsBtn = () => {
+  //   if (settings.saved) {
+  //     return (
+  //       <>
+  //         <Settings text="Update My Fucking Settings" handleChange={saveSettings} />
+  //         <Settings text="Forget My Fucking Settings" handleChange={removeSettings} />
+  //       </>
+  //     )
+  //   } else {
+  //     return <Settings text="Save My Fucking Settings" handleChange={saveSettings} />
+  //   }
+  // }
 
   // localStorage/settings helper functions
   const saveSettings = () => {
@@ -220,7 +221,7 @@ const App = () => {
   if (loading) {
     return <h1>Loading...</h1>
   } else {
-    const { scale } = settings
+    const { scale, saved } = settings
     const { city, state } = location
     const { toggle: searchToggle, term: searchTerm, error, locations } = search
     const { description, icon } = weather
@@ -238,8 +239,14 @@ const App = () => {
         <>
           <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
           <Forecast forecast={ calculateForecast() } />
-          <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } />
-          { renderSettingsBtn() }
+          <Settings 
+            handleSave={saved ? removeSettings : saveSettings} 
+            saved={saved}
+            handleScale={changeScale}
+            scale={scale}
+          />
+          {/* <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } /> */}
+          {/* { renderSettingsBtn() } */}
         </> : null
         }
         

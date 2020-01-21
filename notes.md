@@ -7,8 +7,8 @@
   // { searchToggle ? }
   ✅ SearchBar { searchTerm, handleChange, handleBackNav, handleSearch, city, state }
   ✅ Weather { ...weather, scale }
-  + Forecast { forecast }
-  + SettingsBtn {  scale, handleToggle }
+  ✅ Forecast { forecast }
+  + Settings {  saved, handleSave, scale, handleScale }
   // { locationList.length !== 0 ?}
   + LocationsList { locations, handleSelect }
     + Location { location, handleSelect }
