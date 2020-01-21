@@ -8,12 +8,12 @@
   ✅ SearchBar { searchTerm, handleChange, handleBackNav, handleSearch, city, state }
   ✅ Weather { ...weather, scale }
   ✅ Forecast { forecast }
-  + Settings {  saved, handleSave, scale, handleScale }
-  // { locationList.length !== 0 ?}
-  + LocationsList { locations, handleSelect }
-    + Location { location, handleSelect }
+  ✅ Settings {  saved, handleSave, scale, handleScale }
+  // { locations.length !== 0 ?}
+  ✅ LocationsList { locations, handleSelect }
+    ✅ Location { location, handleSelect }
   // { error ? }
-  + Error { error }
+  ✅ Error { error }
 
 ## Initial State
 

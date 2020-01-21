@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 
+import Loading from '../components/Loading'
 import Header from '../components/Header'
 import Weather from '../components/Weather'
 import Forecast from '../components/Forecast'
 // import Button from '../components/Button'
 import SearchBar from '../components/SearchBar'
 import Settings from '../components/Settings'
-import LocationList from '../components/LocationList'
+import LocationsList from './LocationsList'
 import Error from '../components/Error'
 
 import { forecasts } from '../helper/forecasts'
@@ -219,7 +220,7 @@ const App = () => {
   console.log(loading, weather.temp)
 
   if (loading) {
-    return <h1>Loading...</h1>
+    return <Loading />
   } else {
     const { scale, saved } = settings
     const { city, state } = location
@@ -251,7 +252,7 @@ const App = () => {
         }
         
         { locations.length > 0 ? 
-          <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
+          <LocationsList locations={ locations } handleSelect={ handleLocationSelect } /> : null
         }
         { error ? <Error error={ error } /> : null }
       </div>
