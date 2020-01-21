@@ -4,7 +4,6 @@ import Loading from '../components/Loading'
 import Header from '../components/Header'
 import Weather from '../components/Weather'
 import Forecast from '../components/Forecast'
-// import Button from '../components/Button'
 import SearchBar from '../components/SearchBar'
 import Settings from '../components/Settings'
 import LocationsList from './LocationsList'
@@ -17,12 +16,7 @@ const App = () => {
 // ----------------------- Set up initial state -----------------------
 
   const [loading, updateLoading] = useState(true)
-  // const [searchTerm, updateSearchTerm] = useState('')
-  // const [error, updateError] = useState(undefined)
-  // const [locations, updateLocations] = useState([])
-
   const [search, updateSearch] = useState({ toggle: false, locations: [], term: '', error: null })
-
   const [settings, updateSettings] = useState({ scale: 'C', saved: false })
   const [weather, updateWeather] = useState({ temp: 0, description: '', icon: '' })
   const [location, updateLocation] = useState({ city: 'London', state: 'England', coord: {lat: 51.5074, lng: 0.1278} })
@@ -85,15 +79,10 @@ const App = () => {
   }
 
   const changeSearch = e => {
-    // updateSearchTerm(e.target.value)
     updateSearch({ ...search, term: e.target.value })
   }
 
   const resetSearch = () => {
-    // updateError(undefined)
-    // updateLocations([])
-    // updateSearchTerm('')
-
     updateSearch({ toggle: false, locations: [], term: '', error: null })
   }
 
@@ -137,34 +126,17 @@ const App = () => {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data)
       
       updateWeather({ temp: data.main.temp, description: data.weather[0].description, icon: data.weather[0].icon }) // DRY THIS UP!
       updateLoading(false)
       if (search.term !== '') resetSearch()
     })
     .catch(err => {
-      console.log(err.message)
-      // updateError(err.message)
       updateSearch({ ...search, error: err.message })
     })
   }
 
 // ----------------------- Helper functions -----------------------
-
-  // Renders different settings buttons depending on whether or not the user has chosen to save their settings
-  // const renderSettingsBtn = () => {
-  //   if (settings.saved) {
-  //     return (
-  //       <>
-  //         <Settings text="Update My Fucking Settings" handleChange={saveSettings} />
-  //         <Settings text="Forget My Fucking Settings" handleChange={removeSettings} />
-  //       </>
-  //     )
-  //   } else {
-  //     return <Settings text="Save My Fucking Settings" handleChange={saveSettings} />
-  //   }
-  // }
 
   // localStorage/settings helper functions
   const saveSettings = () => {
@@ -217,8 +189,6 @@ const App = () => {
 
 // ----------------------- Loading App and it's children -----------------------
 
-  console.log(loading, weather.temp)
-
   if (loading) {
     return <Loading />
   } else {
@@ -246,8 +216,6 @@ const App = () => {
             handleScale={changeScale}
             scale={scale}
           />
-          {/* <Button handleClick={ changeScale } scale={ scale === 'C' ? 'fahrenheit' : 'celsius' } /> */}
-          {/* { renderSettingsBtn() } */}
         </> : null
         }
         
