@@ -4,9 +4,10 @@ import Header from '../components/Header'
 import Weather from '../components/Weather'
 import Forcast from '../components/Forcast'
 import Button from '../components/Button'
-import UpdateForm from '../components/UpdateForm'
+import SearchBar from '../components/SearchBar'
 import SettingsButton from '../components/SettingsButton'
 import LocationList from '../components/LocationList'
+import Error from '../components/Error'
 
 import { forcasts } from '../helper/forcasts'
 
@@ -19,7 +20,7 @@ const App = () => {
   // const [error, updateError] = useState(undefined)
   // const [locations, updateLocations] = useState([])
 
-  const [search, updateSearch] = useState({ toggle: false, locations: [], term: '', errors: null })
+  const [search, updateSearch] = useState({ toggle: false, locations: [], term: '', error: null })
 
   const [settings, updateSettings] = useState({ scale: 'C', saved: false })
   const [weather, updateWeather] = useState({ temp: 0, description: '', icon: '' })
@@ -91,7 +92,7 @@ const App = () => {
     // updateLocations([])
     // updateSearchTerm('')
 
-    updateSearch({ toggle: false, locations: [], term: '', errors: null })
+    updateSearch({ toggle: false, locations: [], term: '', error: null })
   }
 
   const toggleSearch = () => {
@@ -108,7 +109,7 @@ const App = () => {
     .then(data => {
       switch (data.length) {
         case 0:
-          updateSearch({ ...search, errors: "I can't find your fucking location!" })
+          updateSearch({ ...search, error: "I can't find your fucking location!" })
           break
         case 1:
           const location = data[0]
@@ -116,7 +117,7 @@ const App = () => {
           resetSearch()
           break
         default:
-          updateSearch({ ...search, errors: null, locations: data })
+          updateSearch({ ...search, error: null, locations: data })
           break
       }
     })
@@ -143,7 +144,7 @@ const App = () => {
     .catch(err => {
       console.log(err.message)
       // updateError(err.message)
-      updateSearch({ ...search, errors: err.message })
+      updateSearch({ ...search, error: err.message })
     })
   }
 
@@ -221,19 +222,19 @@ const App = () => {
   } else {
     const { scale } = settings
     const { city, state } = location
-    const { toggle: searchToggle, term: searchTerm, errors, locations } = search
+    const { toggle: searchToggle, term: searchTerm, error, locations } = search
     const { description, icon } = weather
 
     return (
       <div id='app'>
         {
           searchToggle ? 
-            <UpdateForm searchTerm={ searchTerm } handleBackNav={resetSearch} handleChange={ changeSearch } handleSearch={ searchLocations } />
+            <SearchBar searchTerm={ searchTerm } handleBackNav={resetSearch} handleChange={ changeSearch } handleSearch={ searchLocations } state={state} city={city} />
               :
             <Header city={ city } state={ state } handleClick={toggleSearch}/>
         }
 
-        { locations.length === 0 && !errors ?
+        { locations.length === 0 && !error ?
         <>
           <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
           <Forcast forcast={ calculateForcast() } />
@@ -245,7 +246,7 @@ const App = () => {
         { locations.length > 0 ? 
           <LocationList locations={ locations } handleSelect={ handleLocationSelect } /> : null
         }
-        { errors ? <h2>{ errors }</h2> : null }
+        { error ? <Error error={ error } /> : null }
       </div>
     )
   }
