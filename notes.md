@@ -5,7 +5,7 @@
 + App
   + Header { city, state, handleToggle + def props: 'The Fucking Weather' }
   // { searchToggle ? }
-  + SearchBar { searchTerm, handleChange, handleClick }
+  + SearchBar { searchTerm, handleChange, handleBackNav, handleSearch }
   + Weather { ...weather, scale }
   + Forecast { forecast }
   + SettingsBtn {  scale, handleToggle }

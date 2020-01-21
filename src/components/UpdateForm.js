@@ -1,14 +1,14 @@
 import React from 'react'
 
-const UpdateForm = ({ searchTerm, handleChange, handleClick }) => {
+const UpdateForm = ({ searchTerm, handleBackNav, handleChange, handleSearch }) => {
 
   return(
     <>
-      <p>Update Form Component</p>
+      <p onClick={handleBackNav}>↩️ Back</p>
       <form>
         <label htmlFor='location' />
         <input type='text' value={searchTerm} onChange={ handleChange } name='location' />
-        <input type='submit' value='Update my fucking location' onClick={ handleClick } />
+        <input type='submit' value='Update my fucking location' onClick={ handleSearch } />
       </form>
     </>
   )

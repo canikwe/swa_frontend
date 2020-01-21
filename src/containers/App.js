@@ -94,6 +94,10 @@ const App = () => {
     updateSearch({ toggle: false, locations: [], term: '', errors: null })
   }
 
+  const toggleSearch = () => {
+    updateSearch({ ...search, toggle: true })
+  }
+
 // ----------------------- Async callback/helper functions -----------------------
 
   const searchLocations = e => {
@@ -224,9 +228,9 @@ const App = () => {
       <div id='app'>
         {
           searchToggle ? 
-            <UpdateForm searchTerm={ searchTerm } handleChange={ changeSearch } handleClick={ searchLocations } />
+            <UpdateForm searchTerm={ searchTerm } handleBackNav={resetSearch} handleChange={ changeSearch } handleSearch={ searchLocations } />
               :
-            <Header city={ city } state={ state }/>
+            <Header city={ city } state={ state } handleClick={toggleSearch}/>
         }
 
         { locations.length === 0 && !errors ?
