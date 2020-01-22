@@ -1,14 +1,11 @@
 /* h1 {
   font-size: 6em;
 } 
+*/
 
 #app {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; 
+  padding: 2%;
 }
-*/
 
 .location {
   font-style: italic;
@@ -58,10 +55,11 @@
   width: 75%; 
 }
 
-.description {
+.header {
   display: flex;
-  justify-items: flex-start;
+  align-items: center;
 }
+
 
 body {
   margin: 0;

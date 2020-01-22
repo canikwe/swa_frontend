@@ -2,10 +2,13 @@ import React from 'react'
 
 const Header = ({city, state, handleToggle}) => {
   return (
-    <p className='location'>
+   <div className='header'>
+    <span className='location'>
       {city}, {state} 
-      <span onClick={handleToggle}>  🔍</span>
-    </p>
+
+    </span>
+      <i className="material-icons" onClick={handleToggle}> search</i>
+      </div>
   )
 }
 
