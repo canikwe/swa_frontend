@@ -3,20 +3,23 @@ import React from 'react'
 const SearchBar = ({ searchTerm, handleBackNav, handleChange, handleSearch, city, state }) => {
 
   return(
-    <>
-      <p onClick={handleBackNav}>↩️ Back</p>
-      <form>
+    <div className='header'>
+      <i onClick={handleBackNav} className="material-icons">arrow_back_ios</i>
+      <form className='header'>
         <label htmlFor='location' />
-        <input 
+        <input
+          className='search'
           type='text' 
           value={searchTerm} 
           onChange={ handleChange } 
           name='location' 
-          placeholder={`${city}, ${state}`}
+          placeholder='Update your fucking location'
         />
-        <input type='submit' value='Update my fucking location' onClick={ handleSearch } />
+        <button type='submit' onClick={handleSearch} className='btn'>
+          <i className="material-icons">search</i>
+        </button>
       </form>
-    </>
+    </div>
   )
 }
 

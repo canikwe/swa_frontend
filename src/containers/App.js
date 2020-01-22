@@ -87,7 +87,7 @@ const App = () => {
   }
 
   const toggleSearch = () => {
-    updateSearch({ ...search, toggle: true })
+    updateSearch({ ...search, toggle: true, term: `${location.city}, ${location.state}` })
   }
 
 // ----------------------- Async callback/helper functions -----------------------

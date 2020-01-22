@@ -7,7 +7,7 @@ const Header = ({city, state, handleToggle}) => {
       {city}, {state} 
 
     </span>
-      <i className="material-icons" onClick={handleToggle}> search</i>
+      <i className="material-icons btn" onClick={handleToggle}> search</i>
       </div>
   )
 }

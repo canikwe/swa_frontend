@@ -60,6 +60,21 @@
   align-items: center;
 }
 
+.search {
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, 0);
+  border: 0;
+  box-shadow: 0px 0px 1px #555555;
+  width: 250px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.btn {
+  background-color: rgba(255, 255, 255, 0);
+  border: 0;
+  cursor: pointer;
+}
 
 body {
   margin: 0;
