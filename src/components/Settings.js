@@ -2,7 +2,9 @@ import React from 'react'
 
 const Settings = ({ saved, handleSave, scale, handleScale }) => {
   return (
-    <div className='settings'>
+    <div className='center'>
+
+    <div className='settings container'>
       <div className='scale'>
         <span 
           className={scale === 'C' ? 'active' : 'inactive'}
@@ -26,6 +28,8 @@ const Settings = ({ saved, handleSave, scale, handleScale }) => {
         </div>
       </div>
     </div>
+    </div>
+
   )
 }
 

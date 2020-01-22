@@ -3,7 +3,7 @@
 } 
 
 #app {
- display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center; 
@@ -52,6 +52,15 @@
 
 .scale {
   font-size: 24px;
+}
+
+.container {
+  width: 75%; 
+}
+
+.description {
+  display: flex;
+  justify-items: flex-start;
 }
 
 body {
@@ -130,4 +139,12 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* --------- mobile view --------- */
+
+@media only screen and (max-width: 650px) {
+  [class*='container'] {
+    width: 100%;
+  }
 }

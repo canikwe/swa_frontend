@@ -1,16 +1,18 @@
 import React from 'react'
 
-const Forecast = ({ forecast }) => {
+const Forecast = ({ forecast: {msg, description} }) => {
 
   const sample = (max) => {
     return Math.floor(Math.random() * Math.floor(max))
   }
 
   return (
-    <>
-      <h1 className='rating center'>{ forecast.msg }</h1>
-      <p>{ forecast.description }</p>
-    </>
+    <div className='center'>
+      <h1 className='rating'>{ msg }</h1>
+      <div className='container'>
+        <p>{ description }</p>
+      </div>
+    </div>
   )
 }
 
