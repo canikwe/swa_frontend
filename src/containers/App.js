@@ -49,6 +49,7 @@ const App = () => {
 
   const handleLocationUpdate = location => {
     const { components, geometry } = location
+    
     let city
     if (components.city) {
       city = components.city
@@ -66,7 +67,14 @@ const App = () => {
       city = '' 
     }
 
-    updateLocation({ city , state: components.state, coord: geometry })
+    let state
+    if (components.state){
+      state = components.state
+    } else {
+      state = components.country
+    }
+
+    updateLocation({ city , state, coord: geometry })
   }
 
   const changeScale = e => {
@@ -104,7 +112,7 @@ const App = () => {
       updateLoading(false)
       switch (data.length) {
         case 0:
-          updateSearch({ ...search, error: "I can't find your fucking location!" })
+          updateSearch({ ...search, locations: [], error: "I can't find your fucking location!" })
           break
         case 1:
           const location = data[0]

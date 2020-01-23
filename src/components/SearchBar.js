@@ -4,7 +4,7 @@ const SearchBar = ({ searchTerm, handleBackNav, handleChange, handleSearch }) =>
 
   return(
     <div className='header animated fadeIn'>
-      <i onClick={handleBackNav} className="material-icons">arrow_back_ios</i>
+      <i onClick={handleBackNav} className="btn material-icons">arrow_back_ios</i>
       <form className='header'>
         <label htmlFor='location' />
         <input
