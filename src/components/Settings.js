@@ -2,7 +2,7 @@ import React from 'react'
 
 const Settings = ({ saved, handleSave, scale, handleScale }) => {
   return (
-    <div className='center'>
+    <div className='center animated fadeInUp'>
 
     <div className='settings container'>
       <div className='scale'>

@@ -2,7 +2,7 @@ import React from 'react'
 
 const Header = ({city, state, handleToggle}) => {
   return (
-   <div className='header'>
+   <div className='header animated fadeIn'>
     <span className='location'>
       {city}, {state} 
 

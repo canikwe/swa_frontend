@@ -201,15 +201,31 @@ const App = () => {
       <div id='app'>
         {
           searchToggle ? 
-            <SearchBar searchTerm={ searchTerm } handleBackNav={resetSearch} handleChange={ changeSearch } handleSearch={ searchLocations } state={state} city={city} />
+            <SearchBar 
+              searchTerm={searchTerm} 
+              handleBackNav={resetSearch} 
+              handleChange={changeSearch} 
+              handleSearch={searchLocations}
+            />
               :
-            <Header city={ city } state={ state } handleToggle={toggleSearch}/>
+            <Header 
+              city={city} 
+              state={state} 
+              handleToggle={toggleSearch}
+            />
         }
 
         { locations.length === 0 && !error ?
         <>
-          <Weather temp={ getTemp() } scale={ scale } description={ description } icon={ icon }/>
-          <Forecast forecast={ calculateForecast() } />
+          <Weather 
+            temp={getTemp()} 
+            scale={scale} 
+            description={description} 
+            icon={icon}
+          />
+          <Forecast 
+            forecast={calculateForecast()} 
+          />
           <Settings 
             handleSave={saved ? removeSettings : saveSettings} 
             saved={saved}
@@ -220,9 +236,16 @@ const App = () => {
         }
         
         { locations.length > 0 ? 
-          <LocationsList locations={ locations } handleSelect={ handleLocationSelect } /> : null
+          <LocationsList 
+            locations={locations} 
+            handleSelect={handleLocationSelect} 
+          /> : null
         }
-        { error ? <Error error={ error } /> : null }
+        { error ? 
+          <Error 
+            error={error} 
+          /> : null 
+        }
       </div>
     )
   }

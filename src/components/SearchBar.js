@@ -1,15 +1,15 @@
 import React from 'react'
 
-const SearchBar = ({ searchTerm, handleBackNav, handleChange, handleSearch, city, state }) => {
+const SearchBar = ({ searchTerm, handleBackNav, handleChange, handleSearch }) => {
 
   return(
-    <div className='header'>
+    <div className='header animated fadeIn'>
       <i onClick={handleBackNav} className="material-icons">arrow_back_ios</i>
       <form className='header'>
         <label htmlFor='location' />
         <input
           className='search'
-          type='text' 
+          type='search'
           value={searchTerm} 
           onChange={ handleChange } 
           name='location' 
