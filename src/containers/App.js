@@ -95,8 +95,10 @@ const App = () => {
   const searchLocations = e => {
     e.preventDefault()
     updateLoading(true)
+
+    const strippedTerm = search.term.replace(/[^\w\s]/gi, '')
     
-    fetch(`http://localhost:3000/search/${search.term}`)
+    fetch(`http://localhost:3000/search/${strippedTerm}`)
     .then(res => res.json())
     .then(data => {
       updateLoading(false)
