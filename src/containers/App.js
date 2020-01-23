@@ -94,10 +94,12 @@ const App = () => {
 
   const searchLocations = e => {
     e.preventDefault()
+    updateLoading(true)
     
     fetch(`http://localhost:3000/search/${search.term}`)
     .then(res => res.json())
     .then(data => {
+      updateLoading(false)
       switch (data.length) {
         case 0:
           updateSearch({ ...search, error: "I can't find your fucking location!" })
@@ -115,6 +117,7 @@ const App = () => {
   }
 
   const getWeather = search => {
+    updateLoading(true)
     
     fetch(`http://localhost:3000/weather`, {
       method: 'POST',
@@ -132,6 +135,7 @@ const App = () => {
       if (search.term !== '') resetSearch()
     })
     .catch(err => {
+      updateLoading(false)
       updateSearch({ ...search, error: err.message })
     })
   }
