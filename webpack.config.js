@@ -3,7 +3,7 @@ const webpack = require('webpack')
 
 module.exports= {
   entry: "./src/index.js",
-  mode: "development",
+  // mode: "development",
   module: {
     rules: [
       {
@@ -33,7 +33,5 @@ module.exports= {
     contentBase: path.join(__dirname, "/public"),
     port: 3001,
     publicPath: "http://localhost:3000/dist/",
-    // hotOnly: true
   },
-  // plugins: [new webpack.HotModuleReplacementPlugin()]
 }
