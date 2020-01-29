@@ -41,14 +41,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-  entry: './index.js',
+  entry: './src/index.js',
   output: {
     filename: 'bundle.[hash].js',
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './index.html'
+      template: './public/index.html'
     })
   ],
   resolve: {
