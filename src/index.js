@@ -6,3 +6,7 @@ import '../index.css'
 import 'animate.css'
 
 ReactDOM.render(<App />, document.getElementById('root'))
+
+if (module.hot) {
+  module.hot.accept();
+}
