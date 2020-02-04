@@ -68,13 +68,14 @@ module.exports = {
   // },
   output: {
     path: path.join(__dirname, 'public'),
-    publicPath: '/',
+    publicPath: '/public/',
     filename: './bundle.js'
   },
   devServer: {
     // contentBase: './dist',
     historyApiFallback: true
-  }
+  },
+  
   // devServer: {
   //   contentBase: './src',
   //   port: 3001,
