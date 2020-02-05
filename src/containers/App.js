@@ -100,7 +100,7 @@ const App = () => {
 
 // ----------------------- Async callback/helper functions -----------------------
 
-  const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000'
+  const BASE_URL = () => process.env.REACT_APP_BASE_URL || 'http://localhost:3000'
 
   const searchLocations = e => {
     e.preventDefault()
