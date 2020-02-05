@@ -100,7 +100,7 @@ const App = () => {
 
 // ----------------------- Async callback/helper functions -----------------------
 
-  const BASE_URL = () => process.env.REACT_APP_BASE_URL || 'http://localhost:3000'
+  const BASE_URL = () => process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'
 
   const searchLocations = e => {
     e.preventDefault()
@@ -108,7 +108,7 @@ const App = () => {
 
     const strippedTerm = search.term.replace(/[^\w\s]/gi, '')
     
-    fetch(`${BASE_URL()}/search/${strippedTerm}`)
+    fetch(`${BASE_URL()}search/${strippedTerm}`)
     .then(res => res.json())
     .then(data => {
       updateLoading(false)
@@ -131,7 +131,7 @@ const App = () => {
   const getWeather = search => {
     updateLoading(true)
     
-    fetch(`${BASE_URL()}/weather`, {
+    fetch(`${BASE_URL()}weather`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
