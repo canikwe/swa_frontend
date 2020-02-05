@@ -8,9 +8,9 @@ import SearchBar from '../components/SearchBar'
 import Settings from '../components/Settings'
 import LocationsList from './LocationsList'
 import Error from '../components/Error'
-import { BASE_URL } from '../../server'
-
 import { forecasts } from '../helper/forecasts'
+
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'
 
 const App = () => {
 
@@ -24,7 +24,7 @@ const App = () => {
 
 // ----------------------- Effect to fire when component first mounts -----------------------
   useEffect(() => {
-    
+    console.log(BASE_URL)
     const city = localStorage.getItem('city')
 
      if (!!city){
@@ -101,12 +101,9 @@ const App = () => {
 
 // ----------------------- Async callback/helper functions -----------------------
 
-  // const BASE_URL = () => process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'
 
   const searchLocations = e => {
     e.preventDefault()
-    console.log(BASE_URL)
-
     updateLoading(true)
 
     const strippedTerm = search.term.replace(/[^\w\s]/gi, '')
@@ -133,8 +130,6 @@ const App = () => {
 
   const getWeather = search => {
     updateLoading(true)
-    console.log(BASE_URL)
-    // console.log(process.env.BASE_URL)
     
     fetch(`${BASE_URL}weather`, {
       method: 'POST',
