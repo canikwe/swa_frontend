@@ -104,6 +104,8 @@ const App = () => {
 
   const searchLocations = e => {
     e.preventDefault()
+    console.log(BASE_URL())
+    console.log(process.env.BASE_URL)
     updateLoading(true)
 
     const strippedTerm = search.term.replace(/[^\w\s]/gi, '')
