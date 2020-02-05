@@ -81,14 +81,15 @@ module.exports = {
   //   port: 3001,
   //   publicPath: "http://localhost:3000/dist/",
   // },
-  // plugins: [
-  //   new webpack.DefinePlugin({
-  //     'process.env': {
-  //       'NODE_ENV': JSON.stringify('development'),
-  //       'API_HOST': 'http://localhost:3000'
-  //     }
-  //   })
-  // ]
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        // 'NODE_ENV': JSON.stringify('development'),
+        'DEV_URL': 'http://localhost:3000',
+        'REACT_APP_BASE_URL': JSON.stringify(process.env.REACT_APP_BASE_URL)
+      }
+    })
+  ]
 }
 
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
