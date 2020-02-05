@@ -5,6 +5,7 @@ const express = require('express')
 const path = require('path')
 
 const port = process.env.PORT || 3001
+export const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'
 const app = express()
 const publicPath = path.join(__dirname, 'public')
 
