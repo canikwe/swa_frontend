@@ -1,8 +1,6 @@
 const coldDesc = [
   'Someone get me a fucking blanket',
-  'blahhhh',
-  'arghsf',
-  'hello world'
+  'blerg',
 ]
 
 const hotDesc = [
