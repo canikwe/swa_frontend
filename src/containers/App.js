@@ -24,7 +24,6 @@ const App = () => {
 
 // ----------------------- Effect to fire when component first mounts -----------------------
   useEffect(() => {
-    console.log(BASE_URL)
     const city = localStorage.getItem('city')
 
      if (!!city){
