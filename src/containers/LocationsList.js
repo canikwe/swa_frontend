@@ -2,8 +2,7 @@ import React from 'react'
 import Location from '../components/Location'
 
 const LocationsList = ({ locations, handleSelect }) => {
-  console.log(locations)
-  return(
+  return (
     <div className='center animated fadeIn'>
       <h2>Multiple Locations. Please select from below:</h2>
       <ul>

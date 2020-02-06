@@ -10,9 +10,7 @@ import LocationsList from './LocationsList'
 import Error from '../components/Error'
 import { forecasts } from '../helper/forecasts'
 
-// const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'
 const BASE_URL = process.env.REACT_APP_BASE_URL || process.env.DEV_URL
-
 
 const App = () => {
 
