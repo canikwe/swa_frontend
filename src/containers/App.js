@@ -10,7 +10,7 @@ import LocationsList from './LocationsList'
 import Error from '../components/Error'
 import { forecasts } from '../helper/forecasts'
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || process.env.DEV_URL
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:3000/'
 
 const App = () => {
 
@@ -230,7 +230,7 @@ const App = () => {
             />
         }
 
-        { locations.length === 0 && !error ?
+        { !locations.length && !error ?
         <>
           <Weather 
             temp={getTemp()} 
@@ -250,7 +250,7 @@ const App = () => {
         </> : null
         }
         
-        { locations.length > 0 ? 
+        { locations.length ? 
           <LocationsList 
             locations={locations} 
             handleSelect={handleLocationSelect} 

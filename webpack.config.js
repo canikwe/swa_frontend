@@ -36,10 +36,12 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'DEV_URL': 'http://localhost:3000',
+        'DEV_URL': "http://localhost:3000",
         'REACT_APP_BASE_URL': JSON.stringify(process.env.REACT_APP_BASE_URL)
       }
     }),
 
   ]
 }
+
+//html-webpack-plugin --dev

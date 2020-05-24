@@ -9,7 +9,8 @@
     "dev-start": "nodemon --exec babel-node server.js",
     "webpack": "webpack",
     "dev": "npm run webpack -- --mode development --watch",
-    "build": "webpack --config webpack.config.js --mode production"
+    "build": "webpack --config webpack.config.js --mode production",
+    "hi": "webpack-dev-server --mode development --open --config webpack.dev.js"
   },
   "keywords": [],
   "author": "Chine Anikwe",
