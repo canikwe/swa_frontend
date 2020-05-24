@@ -3,7 +3,7 @@ const express = require('express')
 const port = process.env.PORT || 3001
 const app = express()
 
-// serving static files from the public directory
+// serving static files from the dist directory
 app.use(express.static('dist'))
 
 // handle 404 responses for routes outside '/' and '/index.html'
