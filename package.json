@@ -5,13 +5,9 @@
   "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "dev-start": "nodemon --exec babel-node server.js",
-    "webpack": "webpack",
-    "dev": "npm run webpack -- --mode development --watch",
-    "build": "webpack --config webpack.config.js --mode production",
-    "new-start": "webpack-dev-server --config webpack.dev.js --open",
-    "new-build": "webpack --config webpack.prod.js"
+    "start": "node src/server/index.js",
+    "dev-start": "webpack-dev-server --config webpack.dev.js --open",
+    "build": "webpack --config webpack.prod.js"
   },
   "keywords": [],
   "author": "Chine Anikwe",
