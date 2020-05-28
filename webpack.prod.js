@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = merge(common, {
   mode: 'production',
@@ -20,6 +21,9 @@ module.exports = merge(common, {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.REACT_APP_BASE_URL': JSON.stringify(process.env.REACT_APP_BASE_URL)
+    }),
     new HtmlWebpackPlugin({
       template: './src/template.html',
       minify: {

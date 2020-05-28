@@ -1,12 +1,12 @@
 const path = require('path')
-const Dotenv = require('dotenv-webpack');
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
   entry: {
     main: path.join(__dirname, 'src', 'index.js'),
     vendor: path.join(__dirname, 'src', 'vendor.js'),
   },
-  plugins: [new Dotenv()],
+  // plugins: [new Dotenv()],
   module: {
     rules: [
       {
