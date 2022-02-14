@@ -11,7 +11,7 @@ const SearchBar = ({ searchTerm, onNavigateBack, onChange, onSearch }) => {
       updateErrorMessage("That's not a fucking location");
     } else {
       updateErrorMessage(undefined);
-      onSearch(e);
+      onSearch(strippedTerm);
     }
   };
 
